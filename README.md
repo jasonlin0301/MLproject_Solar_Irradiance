@@ -20,7 +20,7 @@ E 是每日能量需求（kWh/day）
 η 是系統效率
 
 '''
-class SolarSystemscale:
+ class SolarSystemscale:
     def __init__(self, daily_energy_demand, system_efficiency, equivalent_sun_hours):
         self.daily_energy_demand = daily_energy_demand  # 每日能量需求 (kWh/day)
         self.system_efficiency = system_efficiency  # 系統效率
