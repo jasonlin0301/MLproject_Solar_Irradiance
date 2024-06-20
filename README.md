@@ -39,6 +39,7 @@ equivalent_sun_hours = 5  # 替換為你的等效日射小時
 solar_system = SolarSystemScale(daily_energy_demand, system_efficiency, equivalent_sun_hours)
 system_size = solar_system.calculate_system_size()
 print(f"需要的系統規模是: {system_size:.2f} kW")
+```
 
 > 政府資料開放平台 日射量資料
 https://data.gov.tw/dataset/168047
