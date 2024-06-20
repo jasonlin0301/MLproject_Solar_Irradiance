@@ -19,11 +19,11 @@ P=η×ESH/E
 E 是每日能量需求（kWh/day）
 η 是系統效率
 
-'''
- class SolarSystemscale:
+```python
+class SolarSystemScale:
     def __init__(self, daily_energy_demand, system_efficiency, equivalent_sun_hours):
         self.daily_energy_demand = daily_energy_demand  # 每日能量需求 (kWh/day)
-        self.system_efficiency = system_efficiency  # 系統效率
+        self.system_efficiency = system_efficiency      # 系統效率
         self.equivalent_sun_hours = equivalent_sun_hours  # 等效日射小時 (hours/day)
 
     def calculate_system_size(self):
@@ -31,9 +31,15 @@ E 是每日能量需求（kWh/day）
         system_size = self.daily_energy_demand / (self.system_efficiency * self.equivalent_sun_hours)
         return system_size
 
-    solar_system = SolarSystemscale(daily_energy_demand, system_efficiency, equivalent_sun_hours)
-    system_size = solar_system.calculate_system_size()
-'''
+# 使用範例
+daily_energy_demand = 30  # 替換為你的每日能量需求
+system_efficiency = 0.85  # 替換為你的系統效率
+equivalent_sun_hours = 5  # 替換為你的等效日射小時
+
+solar_system = SolarSystemScale(daily_energy_demand, system_efficiency, equivalent_sun_hours)
+system_size = solar_system.calculate_system_size()
+print(f"需要的系統規模是: {system_size:.2f} kW")
+
 > 政府資料開放平台 日射量資料
 https://data.gov.tw/dataset/168047
 
