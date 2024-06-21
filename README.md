@@ -182,4 +182,44 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
 {"\u7ad9\u540d":"\u82d7\u6817\u8fb2\u6539","\u5e73\u5747\u6c23\u6eab":"24.3","\u7d55\u5c0d\u6700\u9ad8\u6c23\u6eab":"34.5","\u7d55\u5c0d\u6700\u9ad8\u6c23\u6eab\u65e5\u671f":"05\/31","\u7d55\u5c0d\u6700\u4f4e\u6c23\u6eab":14.3,"\u7d55\u5c0d\u6700\u4f4e\u6c23\u6eab\u65e5\u671f":"05\/16","\u5e73\u5747\u76f8\u5c0d\u6fd5\u5ea6 %":"80.9","\u7e3d\u964d\u96e8\u91cfmm":"127.0","\u5e73\u5747\u98a8\u901fm\/s":"1.7","\u6700\u591a\u98a8\u5411":"NW","\u7e3d\u65e5\u7167\u6642\u6578h":"301.2","\u7e3d\u65e5\u5c04\u91cfMJ\/ m2":"601.6","\u5e73\u5747\u5730\u6eab(0cm)":"25.7","\u5e73\u5747\u5730\u6eab(5cm)":"25.4","\u5e73\u5747\u5730\u6eab(10 cm)":"25.0","\u5e73\u5747\u5730\u6eab(20 cm)":"24.9","\u5e73\u5747\u5730\u6eab(50 cm)":"25.5","\u5e73\u5747\u5730\u6eab(100 cm)":"25.0","Year":1999,"Month":1}
 ```
 
-​
+## 主要設備
+
+建立一個完整的太陽能蓄電系統需要以下主要設備和相應的價格範圍：
+
+### 太陽能板 (Solar Panels)
+
+* Monocrystalline Panels: 單價約為每瓦 $0.60 至 $1.00，400W 的單板價格約為 $250-$360​ <[Solar](https://www.solar.com/learn/solar-panel-cost/)><[GoGreenSolar.com](https://www.gogreensolar.com/pages/solar-components-101)>​​
+* Polycrystalline Panels: 單價約為每瓦 $0.50 至 $0.80，300W 的單板價格約為 $150-$240。
+* Thin-Film Panels: 單價約為每瓦 $0.40 至 $0.70，適用於特定應用場景如柔性安裝​ <[Fenice Energy](https://blog.feniceenergy.com/building-a-complete-solar-electric-system-components-and-setup/)>​。
+
+### 太陽能架設與安裝設備 (Racking and Mounting Equipment)
+
+* Roof Mounts: 單個系統價格約為 $1000 至 $3000。
+* Ground Mounts: 單個系統價格約為 $2000 至 $4000​ <[EnergySage](https://www.energysage.com/solar/solar-panel-setup-what-you-need-to-know/)​​><[ShopSolar.com](https://shopsolarkits.com/blogs/learning-center/solar-panel-system-equipment)​>。
+
+### 逆變器 (Inverters)
+
+* String Inverters: 單價約為 $1000 至 $2500，壽命約 10-15 年。
+* Microinverters: 單價約為每瓦 $1.00 至 $1.20，系統總價約為 $3000-$5000，壽命約 25 年<[GoGreenSolar.com](https://www.gogreensolar.com/pages/solar-components-101)><[Fenice Energy](https://blog.feniceenergy.com/building-a-complete-solar-electric-system-components-and-setup/)>​。
+
+### 蓄電池 (Batteries)
+
+* 鉛酸電池: 每千瓦時價格約為 $200 至 $300。
+* 鋰離子電池: 每千瓦時價格約為 $400 至 $700，10kWh 系統價格約為 $4000-$7000​ <[ShopSolar.com](https://shopsolarkits.com/blogs/learning-center/solar-panel-system-equipment)​>​。
+
+### 電力調節器 (Charge Controllers)
+
+* MPPT Controllers: 單價約為 $100 至 $500，根據系統規模和功能不同​ <[ShopSolar.com](https://shopsolarkits.com/blogs/learning-center/solar-panel-system-equipment)​>​。
+
+### 斷路器 (Disconnect Switch)
+
+* 單價約為 $50 至 $200，用於安全維護和緊急關閉系統​ <[Fenice Energy](https://blog.feniceenergy.com/building-a-complete-solar-electric-system-components-and-setup/)>​。
+
+### 勞力與技術費用
+
+* 安裝太陽能系統的人工成本約為 $3000 至 $7000，根據系統規模和複雜性而異。專業電工的費用可能更高​ <[Solar](https://www.solar.com/learn/solar-panel-cost/)>​。
+
+#### 施工時間
+
+建置一個完整的家庭太陽能系統一般需要 1-3 週，包括現場勘查、系統設計、安裝和測試​ <[Fenice Energy](https://blog.feniceenergy.com/building-a-complete-solar-electric-system-components-and-setup/)>​。
+
