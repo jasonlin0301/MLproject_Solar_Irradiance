@@ -9,7 +9,7 @@ renal denervation 2021](https://www.eshonline.org/esh-content/uploads/2021/09/Eu
 
 等效日射小時表示一天內太陽能輻射量轉化為在1千瓦每平方公尺（1kW/m²）條件下工作的總時間。這個指標有助於評估太陽能系統在特定地區的性能。等效日射小時的計算公式如下：
 
-### <span style="color:azuru">ESH = DailySolarIrradiation (kWh/m²/day) / (1kW/m²)<span>
+# ESH = DailySolarIrradiation (kWh/m²/day) / (1kW/m²)
 
 ### 峰值日射小時（Peak Sun Hours, PSH）
 
