@@ -52,7 +52,11 @@ print(f"需要的系統規模是: {system_size:.2f} kW")
 # 目標方法
 
 1. 計算該地區平均日射量
-2. 單晶矽太陽能板轉換率25%
+2. 使用者輸入欲建置的太陽能瓦數
+    * Daily Energy Production=Power Rating of Panel×ESH
+        - 每日能量產出=太陽能板功率×ESH
+    * example : If you have a 200-watt solar panel and the ESH in your location is 5 hours. Daily Energy Production=200 W×5 hours=1,000 Wh or 1 kWh.
+        - 如果你有一塊 200 瓦的太陽能板，而你所在位置的 ESH 為 5 小時，每日能量產出=200 W×5 小時=1000 Wh 或 1 kWh
 3. 使用者輸入地址。
 4. 使用者輸入建置面積。
 5. m² x ECH x η = KWH **day**,  
