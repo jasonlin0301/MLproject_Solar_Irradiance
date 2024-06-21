@@ -4,11 +4,12 @@
 
 
 > 等效日射小時（Equivalent Sun Hours, ESH）
+
 > 來源：
-> Solarmazd​ ([SOALRMAZD](https://solarmazd.com/peak-sun-hours-psh-what-does-it-mean-and-how-to-estimate-it/))​
-> RenewableWise​ ([Renewablewise](https://www.renewablewise.com/peak-sun-hours-calculator/))​
-> Palmetto​ ([Palmetto](https://palmetto.com/solar/what-are-peak-sun-hours))​
-> Dot Watts​ ([Dot Watts®](https://palmetto.com/solar/what-are-peak-sun-hours))
+> * Solarmazd​ ([SOALRMAZD](https://solarmazd.com/peak-sun-hours-psh-what-does-it-mean-and-how-to-estimate-it/))​
+> * RenewableWise​ ([Renewablewise](https://www.renewablewise.com/peak-sun-hours-calculator/))​
+> * Palmetto​ ([Palmetto](https://palmetto.com/solar/what-are-peak-sun-hours))​
+> * Dot Watts​ ([Dot Watts®](https://palmetto.com/solar/what-are-peak-sun-hours))
 
 等效日射小時表示一天內太陽能輻射量轉化為在1千瓦每平方公尺（1kW/m²）條件下工作的總時間。這個指標有助於評估太陽能系統在特定地區的性能。等效日射小時的計算公式如下：
 
