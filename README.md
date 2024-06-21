@@ -31,8 +31,8 @@
 
 #### 系統規模計算
 
-P=η×ESH/E
-
+P=Sxη×ESH/E
+- S 是系統容量(KW)
 - E 是每日能量需求（kWh/day）
 - η 是系統效率
 
@@ -192,6 +192,25 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
 * Polycrystalline Panels: 單價約為每瓦 $0.50 至 $0.80，300W 的單板價格約為 $150-$240。
 * Thin-Film Panels: 單價約為每瓦 $0.40 至 $0.70，適用於特定應用場景如柔性安裝​ <[Fenice Energy](https://blog.feniceenergy.com/building-a-complete-solar-electric-system-components-and-setup/)>​。
 
+    - 單晶矽太陽能板的大小和主流功率:
+        > 目前，主流的單晶矽太陽能板功率為400W左右。這類太陽能板的尺寸一般約為1.7平方米（1.7m²），具體尺寸因製造商而異，但大多數在1.6米×1米左右。
+
+    - 屋頂面積和可安裝容量計算
+        >台灣30坪的樓地板面積約為99平方米（1坪約等於3.3平方米）。假設屋頂面積與樓地板面積相當，即約99平方米。
+
+    - 每片400W的單晶矽太陽能板大約需要1.7平方米的安裝面積。要計算可以安裝的總容量，首先需要確定可用的實際屋頂面積，考慮到可能的遮蔽物（如通風口、煙囪等）和維護通道。假設**可用面積約為70%**：
+
+        > 可用屋頂面積：
+        99m²×0.70=69.3m²
+        99平方米×0.70=69.3平方米
+
+        > 每片太陽能板的安裝面積為1.7平方米，計算可安裝的太陽能板數量：
+        69.3m²/1.7m²(片)≈40.76(片)
+        取整數，最多可安裝40片太陽能板。
+
+        > 每片太陽能板功率為400W，總容量為：
+        40(片)×400(W/片)=16000W，即16kW。
+
 ### 太陽能架設與安裝設備 (Racking and Mounting Equipment)
 
 * Roof Mounts: 單個系統價格約為 $1000 至 $3000。
@@ -223,3 +242,31 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
 
 建置一個完整的家庭太陽能系統一般需要 1-3 週，包括現場勘查、系統設計、安裝和測試​ <[Fenice Energy](https://blog.feniceenergy.com/building-a-complete-solar-electric-system-components-and-setup/)>​。
 
+## 計算太陽能系統的產生度數
+
+給定的條件：
+* EHS (Equivalent Sun Hours) = 2.5 小時
+* 系統容量 = 16000W (16kW)
+* 系統效率 = 80%
+
+計算公式：
+
+P=Sxη×ESH/E
+- S 是系統容量(KW)
+- E 是每日能量需求（kWh/day）
+- η 是系統效率
+
+16000W×2.5hr×0.80=32000Wh，可以產生32度電。
+
+## 台灣平均家戶用電量
+
+根據台灣電力公司（Taipower）和其他相關資料，台灣家庭的平均每月用電量約為300至400度電​ (ShopSolar.com)​​ (Fenice Energy)​。我們取中間值350度電來做進一步分析。
+
+> 計算年用電量和每日用電量
+
+平均每月用電量=350kWh
+平均每年用電量=350kWh×12月=4200kWh
+平均每日用電量=4200kWhx365天≈11.5kWh，11.5度電
+
+32 > 11.5， Z大於B，只是沒有錢，我也不住透天。
+所以不是日照量的問題，是大樓跟公寓的住宅密集度的問題....(?
