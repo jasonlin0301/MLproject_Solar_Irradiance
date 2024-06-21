@@ -21,6 +21,14 @@
 
 * 如果某地一天接收到 6 kWh/m² 的太陽能量，則該地的 ESH 為 6 小時，意味著該地接收到相當於 6 小時的 1000 W/m² 的陽光。
 
+* Daily Energy Production=Power Rating of Panel×ESH
+
+    - 每日能量產出=太陽能板功率×ESH
+
+* example : If you have a 200-watt solar panel and the ESH in your location is 5 hours. Daily Energy Production=200 W×5 hours=1,000 Wh or 1 kWh.
+
+    - 如果你有一塊 200 瓦的太陽能板，而你所在位置的 ESH 為 5 小時，每日能量產出=200 W×5 小時=1000 Wh 或 1 kWh
+
 #### 系統規模計算
 
 P=η×ESH/E
@@ -52,14 +60,12 @@ print(f"需要的系統規模是: {system_size:.2f} kW")
 # 目標方法
 
 1. 計算該地區平均日射量
-2. 使用者輸入欲建置的太陽能瓦數
-    * Daily Energy Production=Power Rating of Panel×ESH
-        - 每日能量產出=太陽能板功率×ESH
-    * example : If you have a 200-watt solar panel and the ESH in your location is 5 hours. Daily Energy Production=200 W×5 hours=1,000 Wh or 1 kWh.
-        - 如果你有一塊 200 瓦的太陽能板，而你所在位置的 ESH 為 5 小時，每日能量產出=200 W×5 小時=1000 Wh 或 1 kWh
-3. 使用者輸入地址。
-4. 使用者輸入建置面積。
-5. m² x ECH x η = KWH **day**,  
+2. 使用者輸入欲建置的太陽能總瓦數
+3. 使用者輸入地址
+4. 使用者輸入建置面積
+5. 使用者輸入欲建置年度
+6. 依趨勢線計算出P
+7. 計算建置費用
 
 # 資料來源
 
@@ -81,7 +87,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-# 配置Chrome选项
+# set Chrome options
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # 无头模式，不显示浏览器
 
@@ -89,54 +95,54 @@ chrome_options.add_argument("--headless")  # 无头模式，不显示浏览器
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
-# 定义数据下载范围
+# 定義數據下載範圍
 start_year = 1999
 end_year = 2024
 end_month = 5
 
-# 创建空的DataFrame来存储所有数据
+# set DataFrame to save datavalue
 all_data = pd.DataFrame()
 
-# 迭代年份和月份，下载数据
+# for in 年份和月份，下載ta下載table data
 for year in range(start_year, end_year + 1):
     for month in range(1, 13):
-        # 跳过2024年6月及之后的月份
+        # 跳過2024年6月及其後月份
         if year == 2024 and month > end_month:
             break
         
-        # 构建URL
+        # set URL
         url = f"https://www.cwa.gov.tw/V8/C/L/Agri/Agri_month_All.html?year={year}&month={month}"
         
-        # 使用Selenium打开网页
+        # 使用Selenium打開網頁
         driver.get(url)
         
         try:
-            # 等待表格加载完成
+            # 等待表格載入
             table = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "table"))
             )
             
-            # 获取表格HTML
+            # get HTML表格
             table_html = table.get_attribute('outerHTML')
             
-            # 将HTML表格转换为DataFrame
+            # 將HTML表格轉為DataFrame
             df = pd.read_html(table_html)[0]
             
-            # 添加年月信息
+            # 增加年月
             df['Year'] = year
             df['Month'] = month
             
-            # 合并到所有数据的DataFrame中
+            # 合併所有數據的DataFrame中
             all_data = pd.concat([all_data, df], ignore_index=True)
         
         except Exception as e:
             print(f"Failed to retrieve data for {year}-{month}: {e}")
             continue
 
-# 关闭浏览器
+# 關閉瀏覽器
 driver.quit()
 
-# 保存为CSV和JSON格式
+# 儲存CSV和JSON格式
 csv_filename = 'weather_data.csv'
 json_filename = 'weather_data.json'
 
