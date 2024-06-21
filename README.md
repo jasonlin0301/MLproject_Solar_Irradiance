@@ -4,23 +4,28 @@
 
 
 > 等效日射小時（Equivalent Sun Hours, ESH）
-> [European Society of Hypertension position paper on
-renal denervation 2021](https://www.eshonline.org/esh-content/uploads/2021/09/European-Society-of-Hypertesion-position-paper-on-renal-denervation-2021.pdf)
+> 來源：
+> Solarmazd​ ([SOALRMAZD](https://solarmazd.com/peak-sun-hours-psh-what-does-it-mean-and-how-to-estimate-it/))​
+> RenewableWise​ ([Renewablewise](https://www.renewablewise.com/peak-sun-hours-calculator/))​
+> Palmetto​ ([Palmetto](https://palmetto.com/solar/what-are-peak-sun-hours))​
+> Dot Watts​ ([Dot Watts®](https://palmetto.com/solar/what-are-peak-sun-hours))
 
 等效日射小時表示一天內太陽能輻射量轉化為在1千瓦每平方公尺（1kW/m²）條件下工作的總時間。這個指標有助於評估太陽能系統在特定地區的性能。等效日射小時的計算公式如下：
 
-# ESH = DailySolarIrradiation (kWh/m²/day) / (1kW/m²)
+# **ESH = DailySolarIrradiation (kWh/m²/day) / (1kW/m²)**
 
 ### 峰值日射小時（Peak Sun Hours, PSH）
 
-峰值日射小時與等效日射小時相似，通常被視為同義詞。它指的是一天中等效於太陽能電池板在最大功率下運行的總小時數。PSH也使用日均太陽能輻射量來計算，兩者的公式是一樣的，因此在實際應用中，*ESH* 和 *PSH* 通常可以互換使用。
+峰值日射小時與等效日射小時相似，通常被視為同義詞。它指的是一天中等效於太陽能電池板在最大功率下運行的總小時數。PSH也使用日均太陽能輻射量來計算，兩者的公式是一樣的，因此在實際應用中，**ESH** 和 **PSH** 通常**可以互換使用**。
+
+* 如果某地一天接收到 6 kWh/m² 的太陽能量，則該地的 ESH 為 6 小時，意味著該地接收到相當於 6 小時的 1000 W/m² 的陽光。
 
 #### 系統規模計算
 
 P=η×ESH/E
 
-E 是每日能量需求（kWh/day）
-η 是系統效率
+- E 是每日能量需求（kWh/day）
+- η 是系統效率
 
 ```python
 class SolarSystemScale:
@@ -44,6 +49,12 @@ system_size = solar_system.calculate_system_size()
 print(f"需要的系統規模是: {system_size:.2f} kW")
 ```
 # 目標方法
+
+1. 計算該地區平均日射量
+2. 單晶矽太陽能板轉換率25%
+3. 使用者輸入地址。
+4. 使用者輸入建置面積。
+5. m² x ECH x η = KWH **day**,  
 
 # 資料來源
 
