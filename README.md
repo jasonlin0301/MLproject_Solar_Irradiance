@@ -41,10 +41,9 @@ system_size = solar_system.calculate_system_size()
 print(f"需要的系統規模是: {system_size:.2f} kW")
 ```
 
-> 政府資料開放平台 日射量資料
-https://data.gov.tw/dataset/168047
+> 交通部中央氣象署 首頁>生活>農業>農業觀測>全部觀測網月資料
 
-## [日射量資料](https://opendata.cwa.gov.tw/fileapi/v1/opendataapi/O-A0091-001?Authorization=rdec-key-123-45678-011121314&format=JSON)
+## [日射量資料](https://www.cwa.gov.tw/V8/C/L/Agri/Agri_month_All.html)
 ​
 
 
