@@ -122,6 +122,7 @@ all_data.to_csv(csv_filename, index=False)
 all_data.to_json(json_filename, orient='records', lines=True)
 
 print(f"Data has been saved as {csv_filename} and {json_filename}")
+
 ```
 
 ​
