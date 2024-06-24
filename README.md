@@ -169,7 +169,7 @@ csv_filename = 'weather_data.csv'
 json_filename = 'weather_data.json'
 
 all_data.to_csv(csv_filename, index=False)
-all_data.to_json(json_filename, orient='records', lines=True, force_ascii=False)
+all_data.to_json(json_filename, orient='records', lines=True, force_ascii=False) #修正不允許儲存為ascii
 
 print(f"Data has been saved as {csv_filename} and {json_filename}")
 
