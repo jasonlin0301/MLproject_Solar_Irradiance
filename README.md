@@ -196,7 +196,7 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
 
 ## 主要設備
 
-建立一個完整的太陽能蓄電系統需要以下主要設備和相應的價格範圍：
+建立一個完整的太陽能蓄電系統需要以下主要設備和相應的價格範圍(USD)：
 
 ### 太陽能板 (Solar Panels)
 
