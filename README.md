@@ -100,71 +100,71 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-# 设置Chrome选项
+# 設定Chrome選項
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # 无头模式，不显示浏览器
+chrome_options.add_argument("--headless")  # 不顯示瀏覽器
 
-# 使用webdriver-manager安装和管理ChromeDriver
+# 使用webdriver-manager安裝和管理ChromeDriver
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
-# 定义数据下载范围
+# 定義數據下載範圍
 start_year = 1999
 end_year = 2024
 end_month = 5
 
-# 创建一个DataFrame来保存所有数据
+# 建立一個DataFrame来保存所有資料
 all_data = pd.DataFrame()
 
-# 循环年份和月份，下载并保存表格数据
+# 循環年份和月份，下載並保存表格資料
 for year in range(start_year, end_year + 1):
     for month in range(1, 13):
-        # 跳过2024年6月及其后月份
+        # 跳過2024年6月及其後月份
         if year == 2024 and month > end_month:
             break
         
-        # 设置URL
+        # 設定下載URL
         url = f"https://www.cwa.gov.tw/V8/C/L/Agri/Agri_month_All.html?year={year}&month={month}"
         
-        # 使用Selenium打开网页
+        # 使用Selenium開啟網頁
         driver.get(url)
         
         try:
-            # 等待表格加载
+            # 等待表格loading
             table = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "table"))
             )
             
-            # 获取HTML表格
+            # get HTML表格
             table_html = table.get_attribute('outerHTML')
             
-            # 将HTML表格转换为DataFrame
+            # 將HTML表格轉換為DataFrame
             df = pd.read_html(table_html)[0]
             
             # 增加年月
             df['Year'] = year
             df['Month'] = month
             
-            # 合并到所有数据的DataFrame中
+            # 合併到所有數據的DataFrame中
             all_data = pd.concat([all_data, df], ignore_index=True)
         
         except Exception as e:
             print(f"Failed to retrieve data for {year}-{month}: {e}")
             continue
 
-# 关闭浏览器
+# 關閉瀏覽器
 driver.quit()
 
-# 将列名转换为中文
+# 將欄位轉換中文
 columns_rename = {
     'Year': '年份',
     'Month': '月份',
-    # 根据你的数据，添加其他需要转换的列名
+    # 可增加需要的部分
 }
 
 all_data.rename(columns=columns_rename, inplace=True)
 
-# 保存为CSV和JSON格式
+# 儲存為CSV和JSON格式
 csv_filename = 'weather_data.csv'
 json_filename = 'weather_data.json'
 
@@ -175,7 +175,7 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
 
 ```
 
-[csv](./weather_data.csv)
+[csv](./weather/weather_data.csv)
 ```csv
 站名,平均氣溫,絕對最高氣溫,絕對最高氣溫日期,絕對最低氣溫,絕對最低氣溫日期,平均相對濕度 %,總降雨量mm,平均風速m/s,最多風向,總日照時數h,總日射量MJ/ m2,平均地溫(0cm),平均地溫(5cm),平均地溫(10 cm),平均地溫(20 cm),平均地溫(50 cm),平均地溫(100 cm),年份,月份
 桃改樹林分場,24.7,33.9,05/30,16.5,05/15,75.5,103.0,2.1,SSW,254.5,427.2,24.6,24.6,24.5,24.9,24.3,24.4,1999,1
@@ -184,7 +184,7 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
 茶改場,23.9,33.0,05/31,16.6,05/13,76.0,98.0,1.3,W,276.5,504.4,24.8,24.8,24.9,25.0,24.6,23.7,1999,1
 ```
 
-[json](./weather_data.json)
+[json](./weather//weather_data.json)
 
 ```json
 {"站名":"桃改樹林分場","平均氣溫":"24.7","絕對最高氣溫":"33.9","絕對最高氣溫日期":"05\/30","絕對最低氣溫":16.5,"絕對最低氣溫日期":"05\/15","平均相對濕度 %":"75.5","總降雨量mm":"103.0","平均風速m\/s":"2.1","最多風向":"SSW","總日照時數h":"254.5","總日射量MJ\/ m2":"427.2","平均地溫(0cm)":"24.6","平均地溫(5cm)":"24.6","平均地溫(10 cm)":"24.5","平均地溫(20 cm)":"24.9","平均地溫(50 cm)":"24.3","平均地溫(100 cm)":"24.4","年份":1999,"月份":1}
@@ -210,7 +210,7 @@ print(f"Data has been saved as {csv_filename} and {json_filename}")
     - 屋頂面積和可安裝容量計算
         >台灣30坪的樓地板面積約為99平方米（1坪約等於3.3平方米）。假設屋頂面積與樓地板面積相當，即約99平方米。
 
-    - 每片400W的單晶矽太陽能板大約需要1.7平方米的安裝面積。要計算可以安裝的總容量，首先需要確定可用的實際屋頂面積，考慮到可能的遮蔽物（如通風口、煙囪等）和維護通道。假設**可用面積約為70%**：
+    - 每片400W的單晶矽太陽能板大約需要1.7平方米的安裝面積。要計算可以安裝的總容量，首先需要確定可用的實際屋頂面積，考慮到可能的遮蔽物（如通風口、屋頂突出物等）和維護通道。假設**可用面積約為70%**：
 
         > 可用屋頂面積：
         99m²×0.70=69.3m²
