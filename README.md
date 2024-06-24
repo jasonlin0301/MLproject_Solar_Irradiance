@@ -287,12 +287,12 @@ P=Sxη×ESH/E
 
 > 僅留下站名、年份、月份、總日照時數h、總日射量MJ/m2
 
-``` pyhton
+```pyhton
 
 import json
 import pandas as pd
 
-# 读取现有的JSON文件
+# 載入原始json
 file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\weather_data.json'
 
 try:
@@ -305,7 +305,7 @@ except json.JSONDecodeError as e:
     print(f"解析JSON時發生錯誤: {e}")
     exit(1)
 
-# 提取需要的键值对
+# 選擇需要的key&value
 filtered_data = []
 for entry in data:
     filtered_entry = {
@@ -317,14 +317,14 @@ for entry in data:
     }
     filtered_data.append(filtered_entry)
 
-# 保存为新的JSON文件
+# 存為新的JSON檔案
 output_json_path = 'solar.json'
 with open(output_json_path, 'w', encoding='utf-8') as file:
     for entry in filtered_data:
         json.dump(entry, file, ensure_ascii=False)
         file.write('\n')
 
-# 转换为DataFrame并保存为CSV文件
+# 轉DataFrame儲存為新CSV檔
 df = pd.DataFrame(filtered_data)
 output_csv_path = 'solar.csv'
 df.to_csv(output_csv_path, index=False)
