@@ -1,7 +1,7 @@
 import pandas as pd
 
-# 使用原始字符串以避免路徑問題(路徑請自行修改)
-file_path = r'C:\Users\user\Documents\GitHub\jasonlin0301_window\專題\weather_data.csv'
+# 使用原始字符串以避免路徑問題
+file_path = 'weather_data.csv'
 
 # 讀取 CSV 文件
 weather_data = pd.read_csv(file_path)
@@ -10,7 +10,7 @@ weather_data = pd.read_csv(file_path)
 station_names = weather_data[['站名']].drop_duplicates()
 
 # 保存到新的 CSV 文件
-output_path = r'C:\Users\user\Documents\GitHub\jasonlin0301_window\專題\station_names.csv'
+output_path = 'station_names.csv'
 station_names.to_csv(output_path, index=False)
 
 print(f"站名已保存到 {output_path}")
