@@ -4,7 +4,7 @@ import pandas as pd
 station_to_district = pd.read_csv('stations_districts.csv')
 
 # 假設CSV文件包含兩列：'站名' 和 '區域'
-# 將站名對應到區域，並轉換成DataFrame（這一步其實已經在讀取CSV時完成）
+# 將站名對應到區域，並轉換成DataFrame
 df = pd.DataFrame(station_to_district, columns=['站名', '區域'])
 
 # 計算每個區域的出現次數
