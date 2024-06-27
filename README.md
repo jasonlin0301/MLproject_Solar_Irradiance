@@ -93,105 +93,137 @@ print(f'Daily Energy Production: {daily_energy:.2f} kWh')
 import time
 import pandas as pd
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-# 設定Chrome選項
-chrome_options = Options()
-chrome_options.add_argument("--headless")  # 不顯示瀏覽器
+# 初始化啟動chrome webdriver
+driverpath = r"D:\github\MLproject_Solar_Irradiance\chromedriver-win64\chromedriver.exe"  # 瀏覽器驅動程式路徑
+service = Service(driverpath)
 
-# 使用webdriver-manager安裝和管理ChromeDriver
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=chrome_options)
+# 設置Chrome選項以啟用無頭模式
+options = Options()
+options.add_argument('--headless')  # 啟用無頭模式
+options.add_argument('--disable-gpu')  # 如果你使用的是Windows系統，這一步是必要的
+options.add_argument('--no-sandbox')  # 對於Linux系統可能是必要的
+options.add_argument('--disable-dev-shm-usage')  # 共享內存設置
 
-# 定義數據下載範圍
-start_year = 1999
-end_year = 2024
-end_month = 5
+browser = webdriver.Chrome(service=service, options=options)  # 模擬瀏覽器
+wait = WebDriverWait(browser, 10)  # 設置顯式等待時間
 
-# 建立一個DataFrame来保存所有資料
-all_data = pd.DataFrame()
+url = 'https://www.cwa.gov.tw/V8/C/L/Agri/Agri_month_All.html'
+browser.get(url)  # 以get方式進入網站
+time.sleep(3)  # 網站有loading時間
 
-# 循環年份和月份，下載並保存表格資料
-for year in range(start_year, end_year + 1):
+# 初始化總存儲數據的列表
+all_years_data = []
+
+# 遍歷1999年至2024年
+for year in range(1999, 2025):
+    # 找出年份和月份的選單定位
+    year_dropdown = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="Year"]')))  # 使用XPath定位年份選單
+    month_dropdown = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="Month"]')))  # 使用XPath定位月份選單
+
+    # 打開年份選單並選擇對應年份
+    year_dropdown.click()
+    time.sleep(1)  # 確保下拉選單打開
+    year_option = wait.until(EC.presence_of_element_located((By.XPATH, f'//*[@id="Year"]/option[text()="{year}"]')))
+    year_option.click()
+
+    # 初始化存儲每年數據的列表
+    yearly_data = []
+
+    # 遍歷每年的12個月
     for month in range(1, 13):
-        # 跳過2024年6月及其後月份
-        if year == 2024 and month > end_month:
-            break
-        
-        # 設定下載URL
-        url = f"https://www.cwa.gov.tw/V8/C/L/Agri/Agri_month_All.html?year={year}&month={month}"
-        
-        # 使用Selenium開啟網頁
-        driver.get(url)
-        
+        # 打開月份選單並選擇對應月份
+        month_dropdown.click()
+        time.sleep(1)  # 確保下拉選單打開
+
+        # 檢查月份選項是否存在
         try:
-            # 等待表格loading
-            table = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.TAG_NAME, "table"))
-            )
-            
-            # get HTML表格
-            table_html = table.get_attribute('outerHTML')
-            
-            # 將HTML表格轉換為DataFrame
-            df = pd.read_html(table_html)[0]
-            
-            # 增加年月
-            df['Year'] = year
-            df['Month'] = month
-            
-            # 合併到所有數據的DataFrame中
-            all_data = pd.concat([all_data, df], ignore_index=True)
-        
-        except Exception as e:
-            print(f"Failed to retrieve data for {year}-{month}: {e}")
+            month_option = wait.until(EC.presence_of_element_located((By.XPATH, f'//*[@id="Month"]/option[text()="{month}"]')))
+            month_option.click()
+        except:
+            print(f"{year}年{month}月的數據不可用，跳過")
             continue
 
+        # 顯式等待表格加載完成
+        try:
+            wait.until(EC.presence_of_element_located((By.TAG_NAME, 'table')))
+            time.sleep(3)  # 追加等待時間確保數據完全加載
+        except:
+            print(f"{year}年{month}月的數據表格未加載，跳過")
+            continue
+
+        # 使用pandas讀取HTML表格
+        try:
+            tables = pd.read_html(browser.page_source)
+            df = tables[0]
+        except ValueError:
+            print(f"{year}年{month}月的表格數據讀取失敗，跳過")
+            continue
+
+        # 添加年份和月份列
+        df['Year'] = year
+        df['Month'] = month
+
+        # 將數據添加到年度列表中
+        yearly_data.append(df)
+
+    # 合併每年的數據
+    if yearly_data:
+        yearly_df = pd.concat(yearly_data, ignore_index=True)
+
+        # 打印每年抓取到的數據
+        print(f"{year}年的數據：")
+        print(yearly_df)
+
+        # 保存每年的數據為CSV
+        yearly_df.to_csv(f'data_{year}.csv', index=False, encoding='utf-8-sig')
+
+        # 保存每年的數據為JSON
+        yearly_df.to_json(f'data_{year}.json', orient='records', force_ascii=False)
+
+        # 將每年的數據添加到總列表中
+        all_years_data.append(yearly_df)
+
 # 關閉瀏覽器
-driver.quit()
+browser.quit()
 
-# 將欄位轉換中文
-columns_rename = {
-    'Year': '年份',
-    'Month': '月份',
-    # 可增加需要的部分
-}
+# 合併所有年份的數據
+if all_years_data:
+    final_df = pd.concat(all_years_data, ignore_index=True)
 
-all_data.rename(columns=columns_rename, inplace=True)
+    # 打印所有年份抓取到的數據
+    print("所有年份的數據：")
+    print(final_df)
 
-# 儲存為CSV和JSON格式
-csv_filename = 'weather_data.csv'
-json_filename = 'weather_data.json'
+    # 保存所有年份的數據為CSV
+    final_df.to_csv('_data_1999_to_2024.csv', index=False, encoding='utf-8-sig')
 
-all_data.to_csv(csv_filename, index=False)
-all_data.to_json(json_filename, orient='records', lines=True, force_ascii=False) #修正不允許儲存為ascii
+    # 保存所有年份的數據為JSON
+    final_df.to_json('_data_1999_to_2024.json', orient='records', force_ascii=False)
 
-print(f"Data has been saved as {csv_filename} and {json_filename}")
+    print("1999年至2024年的數據已保存為CSV和JSON格式")
 
 ```
 
 [csv](./weather/weather_data.csv)
 ```csv
-站名,平均氣溫,絕對最高氣溫,絕對最高氣溫日期,絕對最低氣溫,絕對最低氣溫日期,平均相對濕度 %,總降雨量mm,平均風速m/s,最多風向,總日照時數h,總日射量MJ/ m2,平均地溫(0cm),平均地溫(5cm),平均地溫(10 cm),平均地溫(20 cm),平均地溫(50 cm),平均地溫(100 cm),年份,月份
-桃改樹林分場,24.7,33.9,05/30,16.5,05/15,75.5,103.0,2.1,SSW,254.5,427.2,24.6,24.6,24.5,24.9,24.3,24.4,1999,1
-茶改北部分場,22.1,31.0,05/12,14.0,05/13,85.8,230.5,1.2,S,249.9,431.5,23.0,23.2,23.2,23.2,23.0,22.2,1999,1
-桃園農改,24.4,31.3,05/31,17.5,05/15,82.0,128.5,2.6,WSW,286.0,533.5,25.0,24.3,24.6,24.4,24.9,23.3,1999,1
-茶改場,23.9,33.0,05/31,16.6,05/13,76.0,98.0,1.3,W,276.5,504.4,24.8,24.8,24.9,25.0,24.6,23.7,1999,1
+站名,平均氣溫,絕對最高氣溫,絕對最高氣溫日期,絕對最低氣溫,絕對最低氣溫日期,平均相對濕度 %,總降雨量mm,平均風速m/s,最多風向,總日照時數h,總日射量MJ/ m2,平均地溫(0cm),平均地溫(5cm),平均地溫(10 cm),平均地溫(20 cm),平均地溫(50 cm),平均地溫(100 cm),Year,Month
+茶改場,15.3,25.5,1/23,7.6,1/15,82.6,73.5,4.0,*,63.3,*176.74,*16.4,*16.4,*16.8,*17.2,*17.9,*19.5,1999,1
+桃園農改,16.1,23.3,1/19,8.8,1/15,81.0,65.5,5.4,45.0,65.7,175.6,17.8,17.5,17.3,18.0,18.9,19.9,1999,1
+五峰站,11.9,21.1,1/14,3.5,1/15,91.3,118.5,0.4,135.0,88.6,227.5,14.6,14.6,14.9,15.3,15.9,17.1,1999,1
+苗栗農改,15.7,25.7,1/19,8.6,1/15,95.9,39.5,2.4,22.5,XXX,XXX,17.8,18.1,18.3,18.5,18.9,19.9,1999,1
+台中農改,17.1,27.4,1/19,10.7,1/15,83.2,16.0,2.5,360.0,166.4,237.07,19.6,19.9,20.3,20.6,21.0,21.8,1999,1
 ```
 
 [json](./weather//weather_data.json)
 
 ```json
-{"站名":"桃改樹林分場","平均氣溫":"24.7","絕對最高氣溫":"33.9","絕對最高氣溫日期":"05\/30","絕對最低氣溫":16.5,"絕對最低氣溫日期":"05\/15","平均相對濕度 %":"75.5","總降雨量mm":"103.0","平均風速m\/s":"2.1","最多風向":"SSW","總日照時數h":"254.5","總日射量MJ\/ m2":"427.2","平均地溫(0cm)":"24.6","平均地溫(5cm)":"24.6","平均地溫(10 cm)":"24.5","平均地溫(20 cm)":"24.9","平均地溫(50 cm)":"24.3","平均地溫(100 cm)":"24.4","年份":1999,"月份":1}
-{"站名":"茶改北部分場","平均氣溫":"22.1","絕對最高氣溫":"31.0","絕對最高氣溫日期":"05\/12","絕對最低氣溫":14.0,"絕對最低氣溫日期":"05\/13","平均相對濕度 %":"85.8","總降雨量mm":"230.5","平均風速m\/s":"1.2","最多風向":"S","總日照時數h":"249.9","總日射量MJ\/ m2":"431.5","平均地溫(0cm)":"23.0","平均地溫(5cm)":"23.2","平均地溫(10 cm)":"23.2","平均地溫(20 cm)":"23.2","平均地溫(50 cm)":"23.0","平均地溫(100 cm)":"22.2","年份":1999,"月份":1}
-{"站名":"桃園農改","平均氣溫":"24.4","絕對最高氣溫":"31.3","絕對最高氣溫日期":"05\/31","絕對最低氣溫":17.5,"絕對最低氣溫日期":"05\/15","平均相對濕度 %":"82.0","總降雨量mm":"128.5","平均風速m\/s":"2.6","最多風向":"WSW","總日照時數h":"286.0","總日射量MJ\/ m2":"533.5","平均地溫(0cm)":"25.0","平均地溫(5cm)":"24.3","平均地溫(10 cm)":"24.6","平均地溫(20 cm)":"24.4","平均地溫(50 cm)":"24.9","平均地溫(100 cm)":"23.3","年份":1999,"月份":1}
-{"站名":"茶改場","平均氣溫":"23.9","絕對最高氣溫":"33.0","絕對最高氣溫日期":"05\/31","絕對最低氣溫":16.6,"絕對最低氣溫日期":"05\/13","平均相對濕度 %":"76.0","總降雨量mm":"98.0","平均風速m\/s":"1.3","最多風向":"W","總日照時數h":"276.5","總日射量MJ\/ m2":"504.4","平均地溫(0cm)":"24.8","平均地溫(5cm)":"24.8","平均地溫(10 cm)":"24.9","平均地溫(20 cm)":"25.0","平均地溫(50 cm)":"24.6","平均地溫(100 cm)":"23.7","年份":1999,"月份":1}
-{"站名":"農工中心","平均氣溫":"24.3","絕對最高氣溫":"33.1","絕對最高氣溫日期":"05\/31","絕對最低氣溫":16.9,"絕對最低氣溫日期":"05\/13","平均相對濕度 %":"76.4","總降雨量mm":"142.5","平均風速m\/s":"1.2","最多風向":"NNW","總日照時數h":"268.5","總日射量MJ\/ m2":"478.7","平均地溫(0cm)":"24.5","平均地溫(5cm)":"23.7","平均地溫(10 cm)":"24.0","平均地溫(20 cm)":"24.0","平均地溫(50 cm)":"23.9","平均地溫(100 cm)":"24.0","年份":1999,"月份":1}
+{"站名":"茶改場","平均氣溫":"15.3","絕對最高氣溫":"25.5","絕對最高氣溫日期":"1\/23","絕對最低氣溫":"7.6","絕對最低氣溫日期":"1\/15","平均相對濕度 %":"82.6","總降雨量mm":"73.5","平均風速m\/s":"4.0","最多風向":"*","總日照時數h":"63.3","總日射量MJ\/ m2":"*176.74","平均地溫(0cm)":"*16.4","平均地溫(5cm)":"*16.4","平均地溫(10 cm)":"*16.8","平均地溫(20 cm)":"*17.2","平均地溫(50 cm)":"*17.9","平均地溫(100 cm)":"*19.5","Year":1999,"Month":1},{"站名":"桃園農改","平均氣溫":"16.1","絕對最高氣溫":"23.3","絕對最高氣溫日期":"1\/19","絕對最低氣溫":"8.8","絕對最低氣溫日期":"1\/15","平均相對濕度 %":"81.0","總降雨量mm":"65.5","平均風速m\/s":"5.4","最多風向":"45.0","總日照時數h":"65.7","總日射量MJ\/ m2":"175.6","平均地溫(0cm)":"17.8","平均地溫(5cm)":"17.5","平均地溫(10 cm)":"17.3","平均地溫(20 cm)":"18.0","平均地溫(50 cm)":"18.9","平均地溫(100 cm)":"19.9","Year":1999,"Month":1},{"站名":"五峰站","平均氣溫":"11.9","絕對最高氣溫":"21.1","絕對最高氣溫日期":"1\/14","絕對最低氣溫":"3.5","絕對最低氣溫日期":"1\/15","平均相對濕度 %":"91.3","總降雨量mm":"118.5","平均風速m\/s":"0.4","最多風向":"135.0","總日照時數h":"88.6","總日射量MJ\/ m2":"227.5","平均地溫(0cm)":"14.6","平均地溫(5cm)":"14.6","平均地溫(10 cm)":"14.9","平均地溫(20 cm)":"15.3","平均地溫(50 cm)":"15.9","平均地溫(100 cm)":"17.1","Year":1999,"Month":1}
 ```
 
 ## 主要設備
@@ -283,9 +315,9 @@ P=Sxη×ESH/E
 32 > 11.5， Z大於B，只是沒有錢，我也不住透天。
 所以不是日照量的問題，是大樓跟公寓的住宅密集度的問題....(?
 
-## 從大資料中擷取需要的數據
+## 由html label新增行政區
 
-> 僅留下站名、年份、月份、總日照時數h、總日射量MJ/m2
+> F12 謝謝你
 
 ```pyhton
 
