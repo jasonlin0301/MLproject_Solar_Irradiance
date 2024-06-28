@@ -21,7 +21,7 @@ for optgroup in soup.find_all('optgroup'):
 # 手動添加未匹配的站名對應行政區
 additional_mappings = {
     '五峰站': '新竹縣',
-    '台中農改': '臺中市',
+    '台中農改': '台中市',
     '雲林分場': '雲林縣',
     '義竹分場': '嘉義縣',
     '恆春畜試': '屏東縣',
@@ -42,11 +42,11 @@ additional_mappings = {
 district_mapping.update(additional_mappings)
 
 # 讀取CSV文件
-csv_file = r'D:\github\MLproject_Solar_Irradiance\test\_data_1999_to_2023.csv'
+csv_file = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\data_1999.csv'
 csv_data = pd.read_csv(csv_file)
 
 # 讀取JSON文件
-json_file = r'D:\github\MLproject_Solar_Irradiance\test\_data_1999_to_2023.json'
+json_file = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\data_1999.json'
 with open(json_file, 'r', encoding='utf-8') as f:
     json_data = json.load(f)
 
@@ -61,7 +61,7 @@ print("未匹配的站名:")
 print(unmatched_stations)
 
 # 保存修改後的CSV文件
-csv_data.to_csv(r'D:\github\MLproject_Solar_Irradiance\test\modified_data_1999_to_2023.csv', index=False)
+csv_data.to_csv(r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\modified_data_1999.csv', index=False)
 
 # 添加行政區到JSON數據
 for entry in json_data:
@@ -69,5 +69,5 @@ for entry in json_data:
     entry['行政區'] = district_mapping.get(station_name, '')
 
 # 保存修改後的JSON文件
-with open(r'D:\github\MLproject_Solar_Irradiance\test\modified_data_1999_to_2023.json', 'w', encoding='utf-8') as f:
+with open(r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\modified_data_1999.json', 'w', encoding='utf-8') as f:
     json.dump(json_data, f, ensure_ascii=False, indent=4)
