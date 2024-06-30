@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the original CSV file
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\filtered_data_output.csv'
+file_path = r'D:\github\MLproject_Solar_Irradiance\temp_solar\filtered_data_output.csv'
 data = pd.read_csv(file_path)
 
 # Function to convert values based on the given rules
@@ -62,8 +62,8 @@ missing_values = data.isnull().sum()
 print(missing_values)
 
 # Save the processed data to new files
-processed_csv_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data.csv'
-processed_json_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed__data.json'
+processed_csv_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data_2.csv'
+processed_json_path = r'D:\github\MLproject_Solar_Irradiance\test\processed__data_2.json'
 data.to_csv(processed_csv_path, index=False, encoding='utf-8-sig')
 data.to_json(processed_json_path, orient='records', force_ascii=False)
 
