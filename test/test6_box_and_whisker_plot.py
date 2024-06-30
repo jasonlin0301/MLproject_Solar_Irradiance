@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 
 # Load the data
-file_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data_2.csv'
+file_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
 data = pd.read_csv(file_path)
 
 # Load the custom font
