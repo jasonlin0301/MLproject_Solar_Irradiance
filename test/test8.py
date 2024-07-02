@@ -4,50 +4,63 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 
-# Load the data
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data.csv'
+# 讀取資料
+# file_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
+file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
 data = pd.read_csv(file_path)
 
-# Function to convert values to float, replace non-numeric values with NaN
+# 設定字體路徑
+# font_path = r'D:\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_properties = FontProperties(fname=font_path)
+
+# 定義轉換函數，將值轉換為浮點數，並將非數字值替換為NaN
 def to_float(value):
     try:
         return float(value)
     except ValueError:
         return np.nan
 
-# Apply the conversion function to the relevant columns
+# 將轉換函數應用到相關的列
 columns_to_check = ['絕對最高氣溫', '絕對最低氣溫']
 for col in columns_to_check:
     data[col] = data[col].apply(to_float)
 
-# Drop rows with NaN values
+# 刪除包含NaN值的行
 data = data.dropna(subset=columns_to_check)
 
-# Define the independent and dependent variables
-X = data[['絕對最低氣溫']].values.reshape(-1, 1)  # Reshape for sklearn
+# 去除離散值（使用IQR法）
+Q1 = data[columns_to_check].quantile(0.25)
+Q3 = data[columns_to_check].quantile(0.75)
+IQR = Q3 - Q1
+data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+# 定義自變量和應變量
+X = data[['絕對最低氣溫']].values.reshape(-1, 1)  # 為sklearn進行重塑
 Y = data['絕對最高氣溫'].values
 
-# Split the data into training and testing sets
+# 將資料分成訓練集和測試集
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
 
-# Fit the Linear Regression model
+# 擬合線性回歸模型
 linear_regressor = LinearRegression()
 linear_regressor.fit(X_train, Y_train)
 
-# Predict and evaluate the model
+# 預測並評估模型
 Y_pred = linear_regressor.predict(X_test)
 mse = mean_squared_error(Y_test, Y_pred)
 r2 = r2_score(Y_test, Y_pred)
 
-print(f'Mean Squared Error: {mse}')
-print(f'R-squared: {r2}')
+print(f'均方誤差: {mse}')
+print(f'R平方值: {r2}')
 
-# Plot the results
-plt.scatter(X_test, Y_test, color='blue', label='Actual')
-plt.plot(X_test, Y_pred, color='red', linewidth=2, label='Predicted')
-plt.xlabel('絕對最低氣溫')
-plt.ylabel('絕對最高氣溫')
-plt.title('Linear Regression: 絕對最低氣溫 vs 絕對最高氣溫')
-plt.legend()
+# 繪製結果圖
+plt.scatter(X_test, Y_test, color='blue', label='實際值')
+plt.plot(X_test, Y_pred, color='red', linewidth=2, label='預測值')
+plt.xlabel('絕對最低氣溫', fontproperties=font_properties)
+plt.ylabel('絕對最高氣溫', fontproperties=font_properties)
+plt.title('線性回歸: 絕對最低氣溫 vs 絕對最高氣溫', fontproperties=font_properties)
+plt.legend(prop=font_properties)
 plt.show()

@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 
 # Load the data
-file_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data.csv'
+# file_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
+file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
 data = pd.read_csv(file_path)
 
 # Convert all relevant columns to float
@@ -19,7 +20,8 @@ data = data.dropna(subset=columns_to_convert)
 correlation_matrix = data[columns_to_convert].corr()
 
 # Load the custom font
-font_path = r'D:\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+# font_path = r'D:\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
 font_properties = FontProperties(fname=font_path)
 
 # Update the font properties for matplotlib
