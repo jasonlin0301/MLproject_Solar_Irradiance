@@ -22,7 +22,7 @@ def to_float(value):
         return np.nan
 
 # 將轉換函數應用到相關的列
-columns_to_check = ['平均氣溫', '總日照時數h', '總日射量MJ/ m2']
+columns_to_check = ['平均氣溫', '總日射量MJ/ m2']
 for col in columns_to_check:
     data[col] = data[col].apply(to_float)
 
@@ -36,7 +36,7 @@ IQR = Q3 - Q1
 data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
 
 # 定義自變量和應變量
-X = data[['總日照時數h', '總日射量MJ/ m2']].values  # 使用總日照時數和總日射量作為自變量
+X = data[['總日射量MJ/ m2']].values  # 使用總日射量作為自變量
 Y = data['平均氣溫'].values  # 依變量是平均氣溫
 
 # 將資料分成訓練集和測試集
@@ -59,7 +59,7 @@ plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
 plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
 plt.xlabel('實際平均氣溫', fontproperties=font_properties)
 plt.ylabel('預測平均氣溫', fontproperties=font_properties)
-plt.title('線性回歸: 總日照時數和總日射量 vs 平均氣溫', fontproperties=font_properties)
+plt.title('線性回歸: 總日射量 vs 平均氣溫', fontproperties=font_properties)
 plt.legend(prop=font_properties)
 
 # 在圖表上添加均方誤差和R平方值
