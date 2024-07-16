@@ -66,4 +66,7 @@ plt.legend(prop=font_properties)
 plt.text(Y_test.min(), Y_test.max(), f'均方誤差: {mse:.2f}\nR平方值: {r2:.2f}', 
          fontsize=12, verticalalignment='top', fontproperties=font_properties)
 
+output_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png'
+plt.savefig(output_path, bbox_inches='tight')
+
 plt.show()

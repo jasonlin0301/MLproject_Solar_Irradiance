@@ -59,5 +59,8 @@ plt.title('統計摘要', fontsize=16, fontproperties=font_properties)
 for key, cell in table.get_celld().items():
     cell.set_text_props(fontproperties=font_properties)
 
+output_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\data.png'
+plt.savefig(output_path, bbox_inches='tight')
+
 # 顯示統計數據圖表
 plt.show()
