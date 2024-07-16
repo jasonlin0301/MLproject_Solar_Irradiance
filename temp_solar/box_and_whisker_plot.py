@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 
 # 設定檔案路徑
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
+file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2.csv'
 data = pd.read_csv(file_path)
 
 # 設定字體
@@ -37,7 +37,7 @@ plt.xticks(rotation=45, fontproperties=font_properties)
 plt.yticks(fontproperties=font_properties)
 
 # 儲存圖片
-output_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\boxplot_no_outliers.png'
+output_path = os.path.join(os.path.dirname(file_path), 'boxplot_no_outliers.png')
 plt.savefig(output_path, bbox_inches='tight')
 
 plt.show()
