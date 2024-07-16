@@ -1,62 +1,60 @@
 import tkinter as tk
 from tkinter import ttk
+from PIL import Image, ImageTk
 import pandas as pd
 
-# 加載數據
+# Load data from CSV
 file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2.csv'
 data = pd.read_csv(file_path)
 
-# 移除任何非數字字符並轉換為浮點數
-data['總日照時數h'] = pd.to_numeric(data['總日照時數h'], errors='coerce')
-data['總日射量MJ/ m2'] = pd.to_numeric(data['總日射量MJ/ m2'], errors='coerce')
+# Function to display selected image
+def display_image(image_path):
+    image = Image.open(image_path)
+    image.thumbnail((800, 600))  # Resize image to fit in the window
+    img = ImageTk.PhotoImage(image)
+    img_label.config(image=img)
+    img_label.image = img
 
-# 計算每日值，忽略NaN值
-data['每日日照時數h'] = data['總日照時數h'] / 30  # 簡單起見，假設每月30天
-data['每日日射量MJ/m2'] = data['總日射量MJ/ m2'] / 30  # 簡單起見，假設每月30天
-
-# 去除選項中的中括號和引號
-data['行政區'] = data['行政區'].str.strip("[]''")
-
-# 顯示選定區域數據的函數
-def show_data(event):
-    selected_area = combo.get()
-    filtered_data = data[data['行政區'] == selected_area]
-    if not filtered_data.empty:
-        average_temp = filtered_data['平均氣溫'].mean()
-        daily_sunshine_hours = filtered_data['每日日照時數h'].mean()
-        daily_solar_radiation = filtered_data['每日日射量MJ/m2'].mean()
-        result.set(f"平均溫度: {average_temp:.2f} °C\n每日日照時數: {daily_sunshine_hours:.2f} h\n每日日射量: {daily_solar_radiation:.2f} MJ/m2")
-        
-        # 顯示過濾後的數據以便調試
-        debug_info.set(f"過濾後的數據:\n{filtered_data.to_string(index=False)}")
-    else:
-        result.set("無數據")
-        debug_info.set("")
-
-# 創建主窗口
+# Create main window
 root = tk.Tk()
-root.title("區域氣象資料")
-root.geometry("600x400")
+root.title("CSV Viewer with Images")
 
-# 下拉菜單的標籤
-label = ttk.Label(root, text="選擇區域:")
-label.pack(pady=10)
+# Create a Treeview widget
+tree = ttk.Treeview(root)
+tree["columns"] = list(data.columns)
+tree["show"] = "headings"
 
-# 下拉菜單
-areas = data['行政區'].unique()
-combo = ttk.Combobox(root, values=areas)
-combo.pack(pady=10)
-combo.bind("<<ComboboxSelected>>", show_data)
+for col in data.columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=100, anchor='center')
 
-# 顯示結果的標籤
-result = tk.StringVar()
-result_label = ttk.Label(root, textvariable=result)
-result_label.pack(pady=10)
+# Add data to the treeview
+for index, row in data.iterrows():
+    tree.insert("", "end", values=list(row))
 
-# 顯示調試信息的標籤
-debug_info = tk.StringVar()
-debug_label = ttk.Label(root, textvariable=debug_info)
-debug_label.pack(pady=10)
+tree.pack(side="left", fill="y")
 
-# 運行主循環
+# Create a Frame for the buttons and image display
+frame = ttk.Frame(root)
+frame.pack(side="right", fill="both", expand=True)
+
+# Create buttons
+button_texts = [
+    ("Boxplot", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\boxplot_no_outliers.png"),
+    ("Statistical Summary", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\data.png"),
+    ("Heatmap", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\heatmap.png"),
+    ("Linear Regression 1", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png"),
+    ("Linear Regression 2", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression01.png"),
+    ("Linear Regression 3", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression02.png"),
+]
+
+for text, path in button_texts:
+    button = ttk.Button(frame, text=text, command=lambda p=path: display_image(p))
+    button.pack(fill="x")
+
+# Label to display the image
+img_label = ttk.Label(frame)
+img_label.pack(fill="both", expand=True)
+
+# Run the application
 root.mainloop()
