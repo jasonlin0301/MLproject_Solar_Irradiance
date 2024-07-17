@@ -2,10 +2,17 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import pandas as pd
-import calculator
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 從CSV加載數據
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2.csv'
+file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
 data = pd.read_csv(file_path)
 
 # 顯示選定圖像的函數
@@ -41,14 +48,14 @@ frame.pack(side="right", fill="both", expand=True)
 
 # 創建按鈕
 button_texts = [
-    ("統計摘要", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\data.png"),
-    ("盒鬚圖", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\boxplot_no_outliers.png"),
-    ("每日平均日照時數", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\line_H.png"),
-    ("平均日照時數常態分佈", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldistribution_H.png"),
-    ("每日平均太陽輻射量", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\line_R.png"),
-    ("平均日射量常態分佈", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldiszribution_R.png"),
-    ("熱力圖", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\heatmap.png"),
-    ("線性回歸", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png"),
+    ("統計摘要", os.path.join('temp_solar', 'data.png')),
+    ("盒鬚圖", os.path.join('temp_solar', 'boxplot_no_outliers.png')),
+    ("每日平均日照時數", os.path.join('temp_solar', 'line_H.png')),
+    ("平均日照時數常態分佈", os.path.join('temp_solar', 'normaldistribution_H.png')),
+    ("每日平均太陽輻射量", os.path.join('temp_solar', 'line_R.png')),
+    ("平均日射量常態分佈", os.path.join('temp_solar', 'normaldistribution_R.png')),
+    ("熱力圖", os.path.join('temp_solar', 'heatmap.png')),
+    ("線性回歸", os.path.join('temp_solar', 'linear_regression.png')),
 ]
 
 for text, path in button_texts:

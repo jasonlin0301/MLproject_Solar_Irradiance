@@ -1,14 +1,21 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
-import os
+
+# 檢查當前工作目錄
+print("Current Working Directory:", os.getcwd())
+
+# 設定工作目錄
+os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 設定檔案路徑
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2.csv'
+file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
 data = pd.read_csv(file_path)
 
 # 設定字體
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
 # 選擇相關的數值列
@@ -38,7 +45,7 @@ plt.xticks(rotation=45, fontproperties=font_properties)
 plt.yticks(fontproperties=font_properties)
 
 # 儲存圖片
-output_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\boxplot_no_outliers.png'
+output_path = os.path.join('temp_solar', 'boxplot_no_outliers.png')
 plt.savefig(output_path, bbox_inches='tight')
 
 plt.show()

@@ -1,13 +1,21 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 讀取數據
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\annual_averages.csv'
+file_path = os.path.join('temp_solar', 'annual_averages.csv')
 data = pd.read_csv(file_path)
 
 # 定義字體屬性
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
 # 函數來可視化每個地區的年日射量
@@ -26,7 +34,9 @@ def visualize_all_regions_solar_radiation():
     plt.legend(prop=font_properties, bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\line_R.png')
+    
+    output_path = os.path.join('temp_solar', 'line_R.png')
+    plt.savefig(output_path, bbox_inches='tight')
     plt.show()
 
 # 可視化所有地區的年日射量

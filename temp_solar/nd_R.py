@@ -2,13 +2,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 讀取數據
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2_with_daily_averages.csv'
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
 data = pd.read_csv(file_path)
 
 # 定義字體屬性
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
 # 清理 '總日射量MJ/ m2' 列，移除非數字字符
@@ -40,5 +48,6 @@ plt.ylabel('頻率', fontproperties=font_properties)
 plt.title('去除異常值後的總日射量常態分佈圖', fontproperties=font_properties)
 
 plt.grid(True)
-plt.savefig(r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldiszribution_R.png')
+output_path = os.path.join('temp_solar', 'normaldistribution_R.png')
+plt.savefig(output_path, bbox_inches='tight')
 plt.show()

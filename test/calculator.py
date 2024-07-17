@@ -1,9 +1,17 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 讀取CSV資料
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\annual_averages.csv'
+file_path = os.path.join('temp_solar', 'annual_averages.csv')
 annual_averages_df = pd.read_csv(file_path)
 
 # 定義太陽能系統相關常數

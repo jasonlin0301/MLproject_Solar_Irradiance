@@ -5,13 +5,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 讀取資料
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
+file_path = os.path.join('test', 'processed_data_v2.csv')
 data = pd.read_csv(file_path)
 
 # 設定字體路徑
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
 # 定義轉換函數，將值轉換為浮點數，並將非數字值替換為NaN
@@ -68,7 +76,7 @@ plt.legend(prop=font_properties)
 plt.text(Y_test.min(), Y_test.max(), f'均方誤差: {mse:.2f}\nR平方值: {r2:.2f}', 
          fontsize=12, verticalalignment='top', fontproperties=font_properties)
 
-output_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png'
+output_path = os.path.join('temp_solar', 'linear_regression.png')
 plt.savefig(output_path, bbox_inches='tight')
 
 plt.show()
