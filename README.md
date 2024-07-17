@@ -597,7 +597,7 @@ plt.savefig(output_path, bbox_inches='tight')
 plt.show()
 ```
 
-### 線性回歸 Y=日照時數 X=平均溫度、最高溫度、最低溫度、日射量
+### 線性回歸 Y=日射量 X=平均溫度、最高溫度、最低溫度、日照時數
 
 ```python
 import pandas as pd
@@ -617,10 +617,10 @@ if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
 print("Updated Working Directory:", os.getcwd())
 
 # 讀取資料
-file_path = os.path.join('test', 'processed_data_v2.csv')
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
 data = pd.read_csv(file_path)
 
-# 設定字體路徑
+# 設定字體屬性
 font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
@@ -647,9 +647,16 @@ Q3 = data[columns_to_check].quantile(0.75)
 IQR = Q3 - Q1
 data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
 
+# 再次檢查並刪除包含NaN值的行
+data = data.dropna()
+
 # 定義自變量和應變量
-X = data[['總日射量MJ/ m2', '平均氣溫']].values  # 使用總日射量和平均氣溫作為自變量
-Y = data['總日照時數h'].values  # 依變量是總日照時數
+X = data[['平均氣溫', '總日照時數h']].values  # 使用平均氣溫和總日照時數作為自變量
+Y = data['總日射量MJ/ m2'].values  # 依變量是總日射量
+
+# 確認X和Y中沒有NaN值
+assert not np.isnan(X).any(), "X contains NaN values"
+assert not np.isnan(Y).any(), "Y contains NaN values"
 
 # 將資料分成訓練集和測試集
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -669,9 +676,9 @@ print(f'R平方值: {r2}')
 # 繪製結果圖
 plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
 plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
-plt.xlabel('實際總日照時數', fontproperties=font_properties)
-plt.ylabel('預測總日照時數', fontproperties=font_properties)
-plt.title('線性回歸: 總日射量和平均氣溫 vs 總日照時數', fontproperties=font_properties)
+plt.xlabel('實際總日射量', fontproperties=font_properties)
+plt.ylabel('預測總日射量', fontproperties=font_properties)
+plt.title('線性回歸: 總日射量 vs 平均氣溫和總日照時數', fontproperties=font_properties)
 plt.legend(prop=font_properties)
 
 # 在圖表上添加均方誤差和R平方值
@@ -687,6 +694,8 @@ plt.show()
 # Final window and calculator
 
 ### calculator.py
+
+>MJ/m² 轉換為kW/m² 的公式：1 MJ/m² = 0.2778 kW/m²
 
 ```python
 import pandas as pd
@@ -722,11 +731,11 @@ DISCONNECT_SWITCH_PRICE_RANGE = (50, 200)
 LABOR_COST_RANGE = (3000, 7000)
 
 # 定義根據樓地板面積計算每日預估發電量的函數
-def calculate_daily_energy(floor_area_tsubo, avg_sunshine_hours):
+def calculate_daily_energy(floor_area_tsubo, esh):
     floor_area_m2 = floor_area_tsubo * 3.305785
     num_panels = floor_area_m2 / AREA_PER_PANEL
     total_watt = num_panels * WATT_PER_PANEL
-    daily_energy = total_watt * avg_sunshine_hours * SYSTEM_EFFICIENCY / 1000  # 轉換成度
+    daily_energy = total_watt * esh * SYSTEM_EFFICIENCY / 1000  # 轉換成度
     return daily_energy
 
 # 定義根據樓地板面積預估安裝價格的函數
@@ -748,8 +757,8 @@ def estimate_installation_cost(floor_area_tsubo, roof_mount=True):
     return total_cost_twd
 
 # 定義建議是否安裝的函數
-def suggest_installation(floor_area_tsubo, avg_sunshine_hours, roof_mount=True):
-    daily_energy = calculate_daily_energy(floor_area_tsubo, avg_sunshine_hours)
+def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
+    daily_energy = calculate_daily_energy(floor_area_tsubo, esh)
     installation_cost = estimate_installation_cost(floor_area_tsubo, roof_mount)
     suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
     return suggestion, daily_energy, installation_cost
@@ -763,13 +772,13 @@ def on_submit(region_var, floor_area_var, result_var):
         messagebox.showerror("輸入錯誤", "請輸入有效的樓地板面積")
         return
     
-    avg_sunshine_hours = annual_averages_df[annual_averages_df['行政區'] == region]['平均每日日照時數'].mean()
+    esh = annual_averages_df[annual_averages_df['行政區'] == region]['ESH'].mean()
     
-    if avg_sunshine_hours is None or pd.isna(avg_sunshine_hours):
-        messagebox.showerror("資料錯誤", "無法找到該區域的平均日照時數資料")
+    if esh is None or pd.isna(esh):
+        messagebox.showerror("資料錯誤", "無法找到該區域的ESH資料")
         return
     
-    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, avg_sunshine_hours)
+    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh)
     
     result_var.set(f"{suggestion}\n每日預估發電量: {daily_energy:.2f} 度\n預估安裝成本: {installation_cost:.2f} 新台幣")
 
@@ -790,6 +799,14 @@ def create_ui(window):
     ttk.Label(window, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
 
     ttk.Button(window, text="提交", command=lambda: on_submit(region_var, floor_area_var, result_var)).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+
+# # 測試函數
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#     root.title("太陽能系統安裝建議")
+#     create_ui(root)
+#     root.mainloop()
+
 ```
 
 ### window.py 主程式
