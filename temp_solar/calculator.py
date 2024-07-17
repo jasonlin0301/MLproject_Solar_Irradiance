@@ -31,11 +31,11 @@ DISCONNECT_SWITCH_PRICE_RANGE = (50, 200)
 LABOR_COST_RANGE = (3000, 7000)
 
 # 定義根據樓地板面積計算每日預估發電量的函數
-def calculate_daily_energy(floor_area_tsubo, avg_sunshine_hours):
+def calculate_daily_energy(floor_area_tsubo, esh):
     floor_area_m2 = floor_area_tsubo * 3.305785
     num_panels = floor_area_m2 / AREA_PER_PANEL
     total_watt = num_panels * WATT_PER_PANEL
-    daily_energy = total_watt * avg_sunshine_hours * SYSTEM_EFFICIENCY / 1000  # 轉換成度
+    daily_energy = total_watt * esh * SYSTEM_EFFICIENCY / 1000  # 轉換成度
     return daily_energy
 
 # 定義根據樓地板面積預估安裝價格的函數
@@ -57,8 +57,8 @@ def estimate_installation_cost(floor_area_tsubo, roof_mount=True):
     return total_cost_twd
 
 # 定義建議是否安裝的函數
-def suggest_installation(floor_area_tsubo, avg_sunshine_hours, roof_mount=True):
-    daily_energy = calculate_daily_energy(floor_area_tsubo, avg_sunshine_hours)
+def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
+    daily_energy = calculate_daily_energy(floor_area_tsubo, esh)
     installation_cost = estimate_installation_cost(floor_area_tsubo, roof_mount)
     suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
     return suggestion, daily_energy, installation_cost
@@ -72,13 +72,13 @@ def on_submit(region_var, floor_area_var, result_var):
         messagebox.showerror("輸入錯誤", "請輸入有效的樓地板面積")
         return
     
-    avg_sunshine_hours = annual_averages_df[annual_averages_df['行政區'] == region]['平均每日日照時數'].mean()
+    esh = annual_averages_df[annual_averages_df['行政區'] == region]['ESH'].mean()
     
-    if avg_sunshine_hours is None or pd.isna(avg_sunshine_hours):
-        messagebox.showerror("資料錯誤", "無法找到該區域的平均日照時數資料")
+    if esh is None or pd.isna(esh):
+        messagebox.showerror("資料錯誤", "無法找到該區域的ESH資料")
         return
     
-    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, avg_sunshine_hours)
+    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh)
     
     result_var.set(f"{suggestion}\n每日預估發電量: {daily_energy:.2f} 度\n預估安裝成本: {installation_cost:.2f} 新台幣")
 
@@ -99,3 +99,10 @@ def create_ui(window):
     ttk.Label(window, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
 
     ttk.Button(window, text="提交", command=lambda: on_submit(region_var, floor_area_var, result_var)).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+
+# # 測試函數
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#     root.title("太陽能系統安裝建議")
+#     create_ui(root)
+#     root.mainloop()
