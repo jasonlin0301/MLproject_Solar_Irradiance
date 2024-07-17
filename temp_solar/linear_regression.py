@@ -15,10 +15,10 @@ if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
 print("Updated Working Directory:", os.getcwd())
 
 # 讀取資料
-file_path = os.path.join('test', 'processed_data_v2.csv')
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
 data = pd.read_csv(file_path)
 
-# 設定字體路徑
+# 設定字體屬性
 font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
@@ -45,9 +45,16 @@ Q3 = data[columns_to_check].quantile(0.75)
 IQR = Q3 - Q1
 data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
 
+# 再次檢查並刪除包含NaN值的行
+data = data.dropna()
+
 # 定義自變量和應變量
-X = data[['總日射量MJ/ m2', '平均氣溫']].values  # 使用總日射量和平均氣溫作為自變量
-Y = data['總日照時數h'].values  # 依變量是總日照時數
+X = data[['平均氣溫', '總日照時數h']].values  # 使用平均氣溫和總日照時數作為自變量
+Y = data['總日射量MJ/ m2'].values  # 依變量是總日射量
+
+# 確認X和Y中沒有NaN值
+assert not np.isnan(X).any(), "X contains NaN values"
+assert not np.isnan(Y).any(), "Y contains NaN values"
 
 # 將資料分成訓練集和測試集
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -67,9 +74,9 @@ print(f'R平方值: {r2}')
 # 繪製結果圖
 plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
 plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
-plt.xlabel('實際總日照時數', fontproperties=font_properties)
-plt.ylabel('預測總日照時數', fontproperties=font_properties)
-plt.title('線性回歸: 總日射量和平均氣溫 vs 總日照時數', fontproperties=font_properties)
+plt.xlabel('實際總日射量', fontproperties=font_properties)
+plt.ylabel('預測總日射量', fontproperties=font_properties)
+plt.title('線性回歸: 總日射量 vs 平均氣溫和總日照時數', fontproperties=font_properties)
 plt.legend(prop=font_properties)
 
 # 在圖表上添加均方誤差和R平方值

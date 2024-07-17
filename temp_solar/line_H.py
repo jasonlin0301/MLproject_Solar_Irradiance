@@ -11,7 +11,7 @@ if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
 print("Updated Working Directory:", os.getcwd())
 
 # 讀取數據
-file_path = os.path.join('temp_solar', 'annual_averages.csv')
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
 data = pd.read_csv(file_path)
 
 # 定義字體屬性
