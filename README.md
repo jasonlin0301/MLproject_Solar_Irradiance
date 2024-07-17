@@ -876,6 +876,9 @@ img_label.pack(fill="both", expand=True)
 # 運行應用程序
 root.mainloop()
 ```
+![window](./螢幕擷取畫面%202024-07-18%20002159.png)
+![calculator01](./螢幕擷取畫面%202024-07-18%20002313.png)
+![calculator02](./螢幕擷取畫面%202024-07-18%20002343.png)
 
 > 主程式加載了整理過後的CSV、各項圖表、並增加了一個按鈕呼叫calculator計算器，計算的公式來源及預估金額之前已提過。
 
