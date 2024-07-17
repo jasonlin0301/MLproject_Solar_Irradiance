@@ -35,8 +35,8 @@ for region in regions:
     annual_averages['行政區'] = region
     results = pd.concat([results, annual_averages], ignore_index=True)
 
-# Save the results to a new CSV file with UTF-8 encoding
+# Save the results to a new CSV file with UTF-8 encoding and BOM for Excel compatibility
 output_file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\annual_averages.csv'
-results.to_csv(output_file_path, index=False, encoding='utf-8')
+results.to_csv(output_file_path, index=False, encoding='utf-8-sig')
 
 print(f"Results saved at: {output_file_path}")
