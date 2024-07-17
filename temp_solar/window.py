@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import pandas as pd
+import calculator
 
 # 從CSV加載數據
 file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2.csv'
@@ -47,6 +48,7 @@ button_texts = [
     ("每日平均太陽輻射量", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\line_R.png"),
     ("平均日射量常態分佈", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldiszribution_R.png"),
     ("熱力圖", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\heatmap.png"),
+    ("線性回歸", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png"),
 ]
 
 for text, path in button_texts:
