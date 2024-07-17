@@ -3,23 +3,23 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import pandas as pd
 
-# Load data from CSV
+# 從CSV加載數據
 file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\processed_data_v2.csv'
 data = pd.read_csv(file_path)
 
-# Function to display selected image
+# 顯示選定圖像的函數
 def display_image(image_path):
     image = Image.open(image_path)
-    image.thumbnail((800, 600))  # Resize image to fit in the window
+    image.thumbnail((800, 600))  # 調整圖像大小以適應窗口
     img = ImageTk.PhotoImage(image)
     img_label.config(image=img)
     img_label.image = img
 
-# Create main window
+# 創建主窗口
 root = tk.Tk()
-root.title("CSV Viewer with Images")
+root.title("CSV查看器與圖片")
 
-# Create a Treeview widget
+# 創建Treeview小部件
 tree = ttk.Treeview(root)
 tree["columns"] = list(data.columns)
 tree["show"] = "headings"
@@ -28,33 +28,34 @@ for col in data.columns:
     tree.heading(col, text=col)
     tree.column(col, width=100, anchor='center')
 
-# Add data to the treeview
+# 將數據添加到Treeview
 for index, row in data.iterrows():
     tree.insert("", "end", values=list(row))
 
 tree.pack(side="left", fill="y")
 
-# Create a Frame for the buttons and image display
+# 創建按鈕和圖像顯示的框架
 frame = ttk.Frame(root)
 frame.pack(side="right", fill="both", expand=True)
 
-# Create buttons
+# 創建按鈕
 button_texts = [
-    ("Boxplot", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\boxplot_no_outliers.png"),
-    ("Statistical Summary", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\data.png"),
-    ("Heatmap", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\heatmap.png"),
-    ("Linear Regression 1", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png"),
-    ("Linear Regression 2", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression01.png"),
-    ("Linear Regression 3", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression02.png"),
+    ("統計摘要", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\data.png"),
+    ("盒鬚圖", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\boxplot_no_outliers.png"),
+    ("每日平均日照時數", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\line_H.png"),
+    ("平均日照時數常態分佈", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldistribution_H.png"),
+    ("每日平均太陽輻射量", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\line_R.png"),
+    ("平均日射量常態分佈", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldiszribution_R.png"),
+    ("熱力圖", r"C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\heatmap.png"),
 ]
 
 for text, path in button_texts:
     button = ttk.Button(frame, text=text, command=lambda p=path: display_image(p))
     button.pack(fill="x")
 
-# Label to display the image
+# 顯示圖像的標籤
 img_label = ttk.Label(frame)
 img_label.pack(fill="both", expand=True)
 
-# Run the application
+# 運行應用程序
 root.mainloop()

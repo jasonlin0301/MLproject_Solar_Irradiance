@@ -17,6 +17,8 @@ font_properties = FontProperties(fname=font_path)
 # 定義轉換函數，將值轉換為浮點數，並將非數字值替換為NaN
 def to_float(value):
     try:
+        if isinstance(value, str) and '*' in value:
+            return float(value.replace('*', ''))
         return float(value)
     except ValueError:
         return np.nan
@@ -36,8 +38,8 @@ IQR = Q3 - Q1
 data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
 
 # 定義自變量和應變量
-X = data[['總日照時數h', '總日射量MJ/ m2']].values  # 使用總日照時數和總日射量作為自變量
-Y = data['平均氣溫'].values  # 依變量是平均氣溫
+X = data[['總日射量MJ/ m2', '平均氣溫']].values  # 使用總日射量和平均氣溫作為自變量
+Y = data['總日照時數h'].values  # 依變量是總日照時數
 
 # 將資料分成訓練集和測試集
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -57,9 +59,9 @@ print(f'R平方值: {r2}')
 # 繪製結果圖
 plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
 plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
-plt.xlabel('實際平均氣溫', fontproperties=font_properties)
-plt.ylabel('預測平均氣溫', fontproperties=font_properties)
-plt.title('線性回歸: 總日照時數和總日射量 vs 平均氣溫', fontproperties=font_properties)
+plt.xlabel('實際總日照時數', fontproperties=font_properties)
+plt.ylabel('預測總日照時數', fontproperties=font_properties)
+plt.title('線性回歸: 總日射量和平均氣溫 vs 總日照時數', fontproperties=font_properties)
 plt.legend(prop=font_properties)
 
 # 在圖表上添加均方誤差和R平方值

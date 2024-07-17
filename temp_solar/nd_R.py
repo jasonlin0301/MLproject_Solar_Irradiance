@@ -11,11 +11,11 @@ data = pd.read_csv(file_path)
 font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
 font_properties = FontProperties(fname=font_path)
 
-# 清理 '總日照時數h' 列，移除非數字字符
-data['總日照時數h'] = pd.to_numeric(data['總日照時數h'], errors='coerce')
+# 清理 '總日射量MJ/ m2' 列，移除非數字字符
+data['總日射量MJ/ m2'] = pd.to_numeric(data['總日射量MJ/ m2'], errors='coerce')
 
 # 移除 NaN 值
-data_filtered = data['總日照時數h'].dropna()
+data_filtered = data['總日射量MJ/ m2'].dropna()
 
 # 計算IQR並移除異常值
 Q1 = data_filtered.quantile(0.25)
@@ -35,10 +35,10 @@ best_fit_line = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
                  np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
 plt.plot(bins, best_fit_line, '--', color='red')
 
-plt.xlabel('總日照時數h', fontproperties=font_properties)
+plt.xlabel('總日射量MJ/ m2', fontproperties=font_properties)
 plt.ylabel('頻率', fontproperties=font_properties)
-plt.title('去除異常值後的總日照時數常態分佈圖', fontproperties=font_properties)
+plt.title('去除異常值後的總日射量常態分佈圖', fontproperties=font_properties)
 
 plt.grid(True)
-plt.savefig(r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldistribution_H.png')
+plt.savefig(r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\normaldiszribution_R.png')
 plt.show()
