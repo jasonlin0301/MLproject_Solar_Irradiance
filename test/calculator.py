@@ -1,5 +1,3 @@
-# calculator.py
-
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -76,7 +74,7 @@ def on_submit(region_var, floor_area_var, result_var):
     
     avg_sunshine_hours = annual_averages_df[annual_averages_df['行政區'] == region]['平均每日日照時數'].mean()
     
-    if avg_sunshine_hours is None or avg_sunshine_hours != avg_sunshine_hours:  # 檢查 NaN
+    if avg_sunshine_hours is None or pd.isna(avg_sunshine_hours):
         messagebox.showerror("資料錯誤", "無法找到該區域的平均日照時數資料")
         return
     
@@ -87,7 +85,7 @@ def on_submit(region_var, floor_area_var, result_var):
 # GUI 應用設定
 def main():
     app = tk.Tk()
-    app.title("太陽能發電系統建議安裝工具")
+    app.title("太陽能系統評估工具")
 
     # 建立視窗部件
     ttk.Label(app, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
