@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import pandas as pd
 import os
+import calculator  # 確保已經有這個模組
 
 # 檢查並設置當前工作目錄
 current_dir = os.getcwd()
@@ -61,6 +62,10 @@ button_texts = [
 for text, path in button_texts:
     button = ttk.Button(frame, text=text, command=lambda p=path: display_image(p))
     button.pack(fill="x")
+
+# 添加執行calculator的按鈕
+calc_button = ttk.Button(frame, text="執行Calculator", command=calculator.main)
+calc_button.pack(fill="x")
 
 # 顯示圖像的標籤
 img_label = ttk.Label(frame)

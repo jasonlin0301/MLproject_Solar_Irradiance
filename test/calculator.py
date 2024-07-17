@@ -1,3 +1,5 @@
+# calculator.py
+
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -5,10 +7,8 @@ import os
 
 # 檢查並設置當前工作目錄
 current_dir = os.getcwd()
-print("Current Working Directory:", current_dir)
 if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
     os.chdir('..')
-print("Updated Working Directory:", os.getcwd())
 
 # 讀取CSV資料
 file_path = os.path.join('temp_solar', 'annual_averages.csv')
@@ -66,7 +66,7 @@ def suggest_installation(floor_area_tsubo, avg_sunshine_hours, roof_mount=True):
     return suggestion, daily_energy, installation_cost
 
 # 定義處理按鈕點擊的函數
-def on_submit():
+def on_submit(region_var, floor_area_var, result_var):
     region = region_var.get()
     try:
         floor_area_tsubo = float(floor_area_var.get())
@@ -76,7 +76,7 @@ def on_submit():
     
     avg_sunshine_hours = annual_averages_df[annual_averages_df['行政區'] == region]['平均每日日照時數'].mean()
     
-    if avg_sunshine_hours is None:
+    if avg_sunshine_hours is None or avg_sunshine_hours != avg_sunshine_hours:  # 檢查 NaN
         messagebox.showerror("資料錯誤", "無法找到該區域的平均日照時數資料")
         return
     
@@ -85,23 +85,27 @@ def on_submit():
     result_var.set(f"{suggestion}\n每日預估發電量: {daily_energy:.2f} 度\n預估安裝成本: {installation_cost:.2f} 新台幣")
 
 # GUI 應用設定
-app = tk.Tk()
-app.title("太陽能發電系統建議安裝工具")
+def main():
+    app = tk.Tk()
+    app.title("太陽能發電系統建議安裝工具")
 
-# 建立視窗部件
-ttk.Label(app, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
-region_var = tk.StringVar()
-region_combo = ttk.Combobox(app, textvariable=region_var)
-region_combo['values'] = annual_averages_df['行政區'].unique().tolist()
-region_combo.grid(column=1, row=0, padx=10, pady=10)
+    # 建立視窗部件
+    ttk.Label(app, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
+    region_var = tk.StringVar()
+    region_combo = ttk.Combobox(app, textvariable=region_var)
+    region_combo['values'] = annual_averages_df['行政區'].unique().tolist()
+    region_combo.grid(column=1, row=0, padx=10, pady=10)
 
-ttk.Label(app, text="樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
-floor_area_var = tk.StringVar()
-ttk.Entry(app, textvariable=floor_area_var).grid(column=1, row=1, padx=10, pady=10)
+    ttk.Label(app, text="樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
+    floor_area_var = tk.StringVar()
+    ttk.Entry(app, textvariable=floor_area_var).grid(column=1, row=1, padx=10, pady=10)
 
-ttk.Button(app, text="提交", command=on_submit).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+    result_var = tk.StringVar()
+    ttk.Label(app, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
 
-result_var = tk.StringVar()
-ttk.Label(app, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
+    ttk.Button(app, text="提交", command=lambda: on_submit(region_var, floor_area_var, result_var)).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
 
-app.mainloop()
+    app.mainloop()
+
+if __name__ == "__main__":
+    main()
