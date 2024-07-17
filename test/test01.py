@@ -1,74 +1,108 @@
 import pandas as pd
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
-import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
+import tkinter as tk
+from tkinter import ttk, messagebox
+import os
 
-# 讀取資料
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
-data = pd.read_csv(file_path)
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
 
-# 設定字體路徑
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
-font_properties = FontProperties(fname=font_path)
+# 讀取CSV資料
+file_path = os.path.join('temp_solar', 'annual_averages.csv')
+annual_averages_df = pd.read_csv(file_path)
 
-# 定義轉換函數，將值轉換為浮點數，並將非數字值替換為NaN
-def to_float(value):
+# 定義太陽能系統相關常數
+WATT_PER_PANEL = 400  # 每塊太陽能板的瓦數
+PANEL_PRICE_RANGE = (250, 360)  # 每塊太陽能板的價格區間（美元）
+USD_TO_TWD = 30  # 美元兌新台幣匯率
+DAILY_ENERGY_THRESHOLD = 11  # 每日能量需求閾值（度）
+SYSTEM_EFFICIENCY = 0.8  # 太陽能系統效率
+AREA_PER_PANEL = 1.7  # 每塊太陽能板所需的面積（平方公尺）
+
+# 其他設備價格範圍（美元）
+ROOF_MOUNT_PRICE_RANGE = (1000, 3000)
+GROUND_MOUNT_PRICE_RANGE = (2000, 4000)
+STRING_INVERTER_PRICE_RANGE = (1000, 2500)
+MICROINVERTER_PRICE_RANGE = (3000, 5000)
+BATTERY_PRICE_RANGE = (4000, 7000)  # 鋰離子電池
+CHARGE_CONTROLLER_PRICE_RANGE = (100, 500)
+DISCONNECT_SWITCH_PRICE_RANGE = (50, 200)
+LABOR_COST_RANGE = (3000, 7000)
+
+# 定義根據樓地板面積計算每日預估發電量的函數
+def calculate_daily_energy(floor_area_tsubo, esh):
+    floor_area_m2 = floor_area_tsubo * 3.305785
+    num_panels = floor_area_m2 / AREA_PER_PANEL
+    total_watt = num_panels * WATT_PER_PANEL
+    daily_energy = total_watt * esh * SYSTEM_EFFICIENCY / 1000  # 轉換成度
+    return daily_energy
+
+# 定義根據樓地板面積預估安裝價格的函數
+def estimate_installation_cost(floor_area_tsubo, roof_mount=True):
+    floor_area_m2 = floor_area_tsubo * 3.305785
+    num_panels = floor_area_m2 / AREA_PER_PANEL
+    panel_cost = num_panels * (sum(PANEL_PRICE_RANGE) / 2)
+    
+    mount_cost = sum(ROOF_MOUNT_PRICE_RANGE) / 2 if roof_mount else sum(GROUND_MOUNT_PRICE_RANGE) / 2
+    inverter_cost = sum(STRING_INVERTER_PRICE_RANGE) / 2
+    battery_cost = sum(BATTERY_PRICE_RANGE) / 2
+    controller_cost = sum(CHARGE_CONTROLLER_PRICE_RANGE) / 2
+    switch_cost = sum(DISCONNECT_SWITCH_PRICE_RANGE) / 2
+    labor_cost = sum(LABOR_COST_RANGE) / 2
+    
+    total_cost_usd = panel_cost + mount_cost + inverter_cost + battery_cost + controller_cost + switch_cost + labor_cost
+    total_cost_twd = total_cost_usd * USD_TO_TWD
+    
+    return total_cost_twd
+
+# 定義建議是否安裝的函數
+def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
+    daily_energy = calculate_daily_energy(floor_area_tsubo, esh)
+    installation_cost = estimate_installation_cost(floor_area_tsubo, roof_mount)
+    suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
+    return suggestion, daily_energy, installation_cost
+
+# 定義處理按鈕點擊的函數
+def on_submit(region_var, floor_area_var, result_var):
+    region = region_var.get()
     try:
-        if isinstance(value, str) and '*' in value:
-            return float(value.replace('*', ''))
-        return float(value)
+        floor_area_tsubo = float(floor_area_var.get())
     except ValueError:
-        return np.nan
+        messagebox.showerror("輸入錯誤", "請輸入有效的樓地板面積")
+        return
+    
+    esh = annual_averages_df[annual_averages_df['行政區'] == region]['ESH'].mean()
+    
+    if esh is None or pd.isna(esh):
+        messagebox.showerror("資料錯誤", "無法找到該區域的ESH資料")
+        return
+    
+    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh)
+    
+    result_var.set(f"{suggestion}\n每日預估發電量: {daily_energy:.2f} 度\n預估安裝成本: {installation_cost:.2f} 新台幣")
 
-# 將轉換函數應用到相關的列
-columns_to_check = ['平均氣溫', '總日照時數h', '總日射量MJ/ m2']
-for col in columns_to_check:
-    data[col] = data[col].apply(to_float)
+# GUI 應用設定
+def create_ui(window):
+    # 建立視窗部件
+    ttk.Label(window, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
+    region_var = tk.StringVar()
+    region_combo = ttk.Combobox(window, textvariable=region_var)
+    region_combo['values'] = annual_averages_df['行政區'].unique().tolist()
+    region_combo.grid(column=1, row=0, padx=10, pady=10)
 
-# 刪除包含NaN值的行
-data = data.dropna(subset=columns_to_check)
+    ttk.Label(window, text="樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
+    floor_area_var = tk.StringVar()
+    ttk.Entry(window, textvariable=floor_area_var).grid(column=1, row=1, padx=10, pady=10)
 
-# 去除離散值（使用IQR法）
-Q1 = data[columns_to_check].quantile(0.25)
-Q3 = data[columns_to_check].quantile(0.75)
-IQR = Q3 - Q1
-data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
+    result_var = tk.StringVar()
+    ttk.Label(window, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
 
-# 定義自變量和應變量
-X = data[['總日射量MJ/ m2', '平均氣溫']].values  # 使用總日射量和平均氣溫作為自變量
-Y = data['總日照時數h'].values  # 依變量是總日照時數
+    ttk.Button(window, text="提交", command=lambda: on_submit(region_var, floor_area_var, result_var)).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
 
-# 將資料分成訓練集和測試集
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
-
-# 擬合線性回歸模型
-linear_regressor = LinearRegression()
-linear_regressor.fit(X_train, Y_train)
-
-# 預測並評估模型
-Y_pred = linear_regressor.predict(X_test)
-mse = mean_squared_error(Y_test, Y_pred)
-r2 = r2_score(Y_test, Y_pred)
-
-print(f'均方誤差: {mse}')
-print(f'R平方值: {r2}')
-
-# 繪製結果圖
-plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
-plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
-plt.xlabel('實際總日照時數', fontproperties=font_properties)
-plt.ylabel('預測總日照時數', fontproperties=font_properties)
-plt.title('線性回歸: 總日射量和平均氣溫 vs 總日照時數', fontproperties=font_properties)
-plt.legend(prop=font_properties)
-
-# 在圖表上添加均方誤差和R平方值
-plt.text(Y_test.min(), Y_test.max(), f'均方誤差: {mse:.2f}\nR平方值: {r2:.2f}', 
-         fontsize=12, verticalalignment='top', fontproperties=font_properties)
-
-output_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\temp_solar\linear_regression.png'
-plt.savefig(output_path, bbox_inches='tight')
-
-plt.show()
+# 測試函數
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.title("太陽能系統安裝建議")
+    create_ui(root)
+    root.mainloop()
