@@ -63,8 +63,6 @@ for text, path in button_texts:
     button = ttk.Button(frame, text=text, command=lambda p=path: display_image(p))
     button.pack(fill="x")
 
-
-
 # 添加執行calculator的按鈕
 calc_button = ttk.Button(frame, text="太陽能系統評估計算", command=calculator.main)
 calc_button.pack(fill="x")

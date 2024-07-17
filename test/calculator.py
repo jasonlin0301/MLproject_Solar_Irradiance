@@ -88,13 +88,13 @@ def main():
     app.title("太陽能系統評估工具")
 
     # 建立視窗部件
-    ttk.Label(app, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
+    ttk.Label(app, text="選擇所在/欲安裝區域:").grid(column=0, row=0, padx=10, pady=10)
     region_var = tk.StringVar()
     region_combo = ttk.Combobox(app, textvariable=region_var)
     region_combo['values'] = annual_averages_df['行政區'].unique().tolist()
     region_combo.grid(column=1, row=0, padx=10, pady=10)
 
-    ttk.Label(app, text="樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
+    ttk.Label(app, text="可支配樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
     floor_area_var = tk.StringVar()
     ttk.Entry(app, textvariable=floor_area_var).grid(column=1, row=1, padx=10, pady=10)
 
