@@ -1,3 +1,5 @@
+> 文長、想看重點直接捲到最後。
+
 # theory 
 
 ### 等效日射小時（Equivalent Sun Hours, ESH）和峰值日射小時（Peak Sun Hours, PSH）是與太陽能系統設計相關的重要概念。
@@ -29,64 +31,13 @@
 
     - 如果你有一塊 200 瓦的太陽能板，而你所在位置的 ESH 為 5 小時，每日能量產出=200 W×5 小時=1000 Wh 或 1 kWh
 
-#### 系統規模計算
-
-P=Sxη×ESH/E
-- S 是系統容量(KW)
-- E 是每日能量需求（kWh/day）
-- η 是系統效率
-
-```python
-class SolarSystem:
-    def __init__(self, system_capacity, efficiency, esh, energy_demand):
-        self.system_capacity = system_capacity  # 系統容量 (kW)
-        self.efficiency = efficiency  # 系統效率
-        self.esh = esh  # 等效日射小時 (hours/day)
-        self.energy_demand = energy_demand  # 每日能量需求 (kWh/day)
-
-    def calculate_system_capacity(self):
-        # 計算所需的系統容量 P
-        P = self.system_capacity * self.efficiency * self.esh / self.energy_demand
-        return P
-
-    def calculate_energy_demand(self):
-        # 計算每日能量需求 E
-        E = self.system_capacity * self.efficiency * self.esh
-        return E
-
-# 使用示例
-system_capacity = 8  # kW
-efficiency = 0.75  # 系統效率
-esh = 5  # 等效日射小時 (hours/day)
-energy_demand = 30  # 每日能量需求 (kWh/day)
-
-solar_system = SolarSystem(system_capacity, efficiency, esh, energy_demand)
-
-# 計算所需的系統容量
-required_capacity = solar_system.calculate_system_capacity()
-print(f'Required System Capacity: {required_capacity:.2f} kW')
-
-# 計算每日能量需求
-daily_energy = solar_system.calculate_energy_demand()
-print(f'Daily Energy Production: {daily_energy:.2f} kWh')
-```
-# 目標方法
-
-1. 計算該地區平均日射量
-2. 使用者輸入欲建置的太陽能總瓦數
-3. 使用者輸入地址
-4. 使用者輸入建置面積
-5. 使用者輸入欲建置年度
-6. 依趨勢線計算出P
-7. 計算建置費用
-
 # 資料來源
 
 > 交通部中央氣象署 首頁>生活>農業>農業觀測>全部觀測網月資料
 
 ## [日射量資料](https://www.cwa.gov.tw/V8/C/L/Agri/Agri_month_All.html)
 ​
-> 使用selenium及webdriver-manager建立虛擬webviewer抓取java資料庫資料並建立.csv及.json
+> 使用selenium及webdriver-manager建立虛擬webviewer抓取java資料庫資料並建立.csv及.json #但後來只用CSV，並下載對應的瀏覽器driver
 
 ```python
 
@@ -220,12 +171,6 @@ if all_years_data:
  台中農改,17.1,27.4,1/19,10.7,1/15,83.2,16.0,2.5,360.0,166.4,237.07,19.6,19.9,20.3,20.6,21.0,21.8,1999,1
 ```
 
-[json](./Raw_Data/_data_1999_to_2024.json)
-
-```json
-{"站名":"茶改場","平均氣溫":"15.3","絕對最高氣溫":"25.5","絕對最高氣溫日期":"1\/23","絕對最低氣溫":"7.6","絕對最低氣溫日期":"1\/15","平均相對濕度 %":"82.6","總降雨量mm":"73.5","平均風速m\/s":"4.0","最多風向":"*","總日照時數h":"63.3","總日射量MJ\/ m2":"*176.74","平均地溫(0cm)":"*16.4","平均地溫(5cm)":"*16.4","平均地溫(10 cm)":"*16.8","平均地溫(20 cm)":"*17.2","平均地溫(50 cm)":"*17.9","平均地溫(100 cm)":"*19.5","Year":1999,"Month":1},{"站名":"桃園農改","平均氣溫":"16.1","絕對最高氣溫":"23.3","絕對最高氣溫日期":"1\/19","絕對最低氣溫":"8.8","絕對最低氣溫日期":"1\/15","平均相對濕度 %":"81.0","總降雨量mm":"65.5","平均風速m\/s":"5.4","最多風向":"45.0","總日照時數h":"65.7","總日射量MJ\/ m2":"175.6","平均地溫(0cm)":"17.8","平均地溫(5cm)":"17.5","平均地溫(10 cm)":"17.3","平均地溫(20 cm)":"18.0","平均地溫(50 cm)":"18.9","平均地溫(100 cm)":"19.9","Year":1999,"Month":1},{"站名":"五峰站","平均氣溫":"11.9","絕對最高氣溫":"21.1","絕對最高氣溫日期":"1\/14","絕對最低氣溫":"3.5","絕對最低氣溫日期":"1\/15","平均相對濕度 %":"91.3","總降雨量mm":"118.5","平均風速m\/s":"0.4","最多風向":"135.0","總日照時數h":"88.6","總日射量MJ\/ m2":"227.5","平均地溫(0cm)":"14.6","平均地溫(5cm)":"14.6","平均地溫(10 cm)":"14.9","平均地溫(20 cm)":"15.3","平均地溫(50 cm)":"15.9","平均地溫(100 cm)":"17.1","Year":1999,"Month":1}
-```
-
 ## 主要設備
 
 建立一個完整的太陽能蓄電系統需要以下主要設備和相應的價格範圍(USD)：
@@ -288,7 +233,7 @@ if all_years_data:
 
 ## 計算太陽能系統的產生度數
 
-給定的條件：
+預設的可達成條件：
 * EHS (Equivalent Sun Hours) = 2.5 小時
 * 系統容量 = 16000W (16kW)
 * 系統效率 = 80%
@@ -410,121 +355,549 @@ P=Sxη×ESH/E
 
 ```
 
-``` JSON
+# 敘述統計、盒鬚圖、折線圖、常態分佈圖、線性回歸 
 
-{
-        "站名": "茶改場",
-        "平均氣溫": "15.3",
-        "絕對最高氣溫": "25.5",
-        "絕對最高氣溫日期": "1/23",
-        "絕對最低氣溫": "7.6",
-        "絕對最低氣溫日期": "1/15",
-        "平均相對濕度 %": "82.6",
-        "總降雨量mm": "73.5",
-        "平均風速m/s": "4.0",
-        "最多風向": "*",
-        "總日照時數h": "63.3",
-        "總日射量MJ/ m2": "*176.74",
-        "平均地溫(0cm)": "*16.4",
-        "平均地溫(5cm)": "*16.4",
-        "平均地溫(10 cm)": "*16.8",
-        "平均地溫(20 cm)": "*17.2",
-        "平均地溫(50 cm)": "*17.9",
-        "平均地溫(100 cm)": "*19.5",
-        "Year": 1999,
-        "Month": 1,
-        "行政區": "桃園市"
-    },
-    {
-        "站名": "桃園農改",
-        "平均氣溫": "16.1",
-        "絕對最高氣溫": "23.3",
-        "絕對最高氣溫日期": "1/19",
-        "絕對最低氣溫": "8.8",
-        "絕對最低氣溫日期": "1/15",
-        "平均相對濕度 %": "81.0",
-        "總降雨量mm": "65.5",
-        "平均風速m/s": "5.4",
-        "最多風向": "45.0",
-        "總日照時數h": "65.7",
-        "總日射量MJ/ m2": "175.6",
-        "平均地溫(0cm)": "17.8",
-        "平均地溫(5cm)": "17.5",
-        "平均地溫(10 cm)": "17.3",
-        "平均地溫(20 cm)": "18.0",
-        "平均地溫(50 cm)": "18.9",
-        "平均地溫(100 cm)": "19.9",
-        "Year": 1999,
-        "Month": 1,
-        "行政區": "桃園市"
-    },
-    {
-        "站名": "五峰站",
-        "平均氣溫": "11.9",
-        "絕對最高氣溫": "21.1",
-        "絕對最高氣溫日期": "1/14",
-        "絕對最低氣溫": "3.5",
-        "絕對最低氣溫日期": "1/15",
-        "平均相對濕度 %": "91.3",
-        "總降雨量mm": "118.5",
-        "平均風速m/s": "0.4",
-        "最多風向": "135.0",
-        "總日照時數h": "88.6",
-        "總日射量MJ/ m2": "227.5",
-        "平均地溫(0cm)": "14.6",
-        "平均地溫(5cm)": "14.6",
-        "平均地溫(10 cm)": "14.9",
-        "平均地溫(20 cm)": "15.3",
-        "平均地溫(50 cm)": "15.9",
-        "平均地溫(100 cm)": "17.1",
-        "Year": 1999,
-        "Month": 1,
-        "行政區": "新竹縣"
-    },
-    {
-        "站名": "苗栗農改",
-        "平均氣溫": "15.7",
-        "絕對最高氣溫": "25.7",
-        "絕對最高氣溫日期": "1/19",
-        "絕對最低氣溫": "8.6",
-        "絕對最低氣溫日期": "1/15",
-        "平均相對濕度 %": "95.9",
-        "總降雨量mm": "39.5",
-        "平均風速m/s": "2.4",
-        "最多風向": "22.5",
-        "總日照時數h": "XXX",
-        "總日射量MJ/ m2": "XXX",
-        "平均地溫(0cm)": "17.8",
-        "平均地溫(5cm)": "18.1",
-        "平均地溫(10 cm)": "18.3",
-        "平均地溫(20 cm)": "18.5",
-        "平均地溫(50 cm)": "18.9",
-        "平均地溫(100 cm)": "19.9",
-        "Year": 1999,
-        "Month": 1,
-        "行政區": "苗栗縣"
-    },
-    {
-        "站名": "台中農改",
-        "平均氣溫": "17.1",
-        "絕對最高氣溫": "27.4",
-        "絕對最高氣溫日期": "1/19",
-        "絕對最低氣溫": "10.7",
-        "絕對最低氣溫日期": "1/15",
-        "平均相對濕度 %": "83.2",
-        "總降雨量mm": "16.0",
-        "平均風速m/s": "2.5",
-        "最多風向": "360.0",
-        "總日照時數h": "166.4",
-        "總日射量MJ/ m2": "237.07",
-        "平均地溫(0cm)": "19.6",
-        "平均地溫(5cm)": "19.9",
-        "平均地溫(10 cm)": "20.3",
-        "平均地溫(20 cm)": "20.6",
-        "平均地溫(50 cm)": "21.0",
-        "平均地溫(100 cm)": "21.8",
-        "Year": 1999,
-        "Month": 1,
-        "行政區": "台中市"
-    },
+### 統計值
+
+```python
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+
+# 設定檔案路徑
+file_path = os.path.join('..', 'temp_solar', 'processed_data_v2.csv')
+
+# 字體設置
+font_path = os.path.join('..', 'ChocolateClassicalSans-Regular.ttf')
+font_properties = FontProperties(fname=font_path)
+
+df = pd.read_csv(file_path)
+
+# 定義需要計算的欄位
+columns_to_analyze = ['平均氣溫', '絕對最高氣溫', '絕對最低氣溫', '總日照時數h', '總日射量MJ/ m2']
+
+# 初始化統計結果字典
+stats_dict = {}
+describe_dict = {}
+
+# 計算每個欄位的統計量
+for column in columns_to_analyze:
+    d = pd.to_numeric(df[column], errors='coerce').dropna()
+    stats = {
+        '計數': d.count(),
+        '最小值': d.min(),
+        '最大值': d.max(),
+        '最小值索引': d.idxmin(),
+        '最大值索引': d.idxmax(),
+        '10%分位數': d.quantile(0.1),
+        '總和': d.sum(),
+        '均值': d.mean(),
+        '中位數': d.median(),
+        '眾數': d.mode().tolist(),  # 眾數可以有多個值
+        '方差': d.var(),
+        '標準差': d.std(),
+        '偏度': d.skew(),
+        '峰度': d.kurt()
+    }
+    stats_dict[column] = stats
+    describe_dict[column] = d.describe().to_dict()
+
+# 將統計數據轉換為 DataFrame
+stats_df = pd.DataFrame(stats_dict)
+describe_df = pd.DataFrame(describe_dict)
+
+# 創建圖表以顯示統計數據
+fig, ax = plt.subplots(figsize=(15, 5))
+ax.axis('tight')
+ax.axis('off')
+table = ax.table(cellText=stats_df.values, colLabels=stats_df.columns, rowLabels=stats_df.index, cellLoc='center', loc='center')
+table.auto_set_font_size(False)
+table.set_fontsize(10)
+table.scale(1.1, 1.2)
+plt.title('統計摘要', fontsize=16, fontproperties=font_properties)
+
+# 設置表格內文字體
+for key, cell in table.get_celld().items():
+    cell.set_text_props(fontproperties=font_properties)
+
+output_path = os.path.join('..', 'temp_solar', 'data.png')
+plt.savefig(output_path, bbox_inches='tight')
+
+# 顯示統計數據圖表
+plt.show()
 ```
+
+### 盒鬚圖
+
+```python
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+
+# 檢查當前工作目錄
+print("Current Working Directory:", os.getcwd())
+
+# 設定工作目錄
+os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
+
+# 設定檔案路徑
+file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
+data = pd.read_csv(file_path)
+
+# 設定字體
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
+font_properties = FontProperties(fname=font_path)
+
+# 選擇相關的數值列
+numerical_cols = ['平均氣溫', '絕對最高氣溫', '絕對最低氣溫', '總日照時數h', '總日射量MJ/ m2']
+
+# 刪除數值列中有缺失值的行
+data_clean = data.dropna(subset=numerical_cols)
+
+# 將數值列轉換為浮點型
+data_clean[numerical_cols] = data_clean[numerical_cols].apply(pd.to_numeric, errors='coerce')
+
+# 計算Q1（第25百分位）和Q3（第75百分位）
+Q1 = data_clean[numerical_cols].quantile(0.25)
+Q3 = data_clean[numerical_cols].quantile(0.75)
+
+# 計算IQR（四分位距）
+IQR = Q3 - Q1
+
+# 過濾掉異常值
+data_no_outliers = data_clean[~((data_clean[numerical_cols] < (Q1 - 1.5 * IQR)) | (data_clean[numerical_cols] > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+# 繪製盒鬚圖
+plt.figure(figsize=(12, 8))
+data_no_outliers.boxplot(column=numerical_cols)
+plt.title('Box Plot of Numerical Columns (without outliers)', fontproperties=font_properties)
+plt.xticks(rotation=45, fontproperties=font_properties)
+plt.yticks(fontproperties=font_properties)
+
+# 儲存圖片
+output_path = os.path.join('temp_solar', 'boxplot_no_outliers.png')
+plt.savefig(output_path, bbox_inches='tight')
+
+plt.show()
+```
+
+### 折線圖
+
+```python
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
+
+# 讀取數據
+file_path = os.path.join('temp_solar', 'annual_averages.csv')
+data = pd.read_csv(file_path)
+
+# 定義字體屬性
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
+font_properties = FontProperties(fname=font_path)
+
+# 函數來可視化每個地區的年平均日照時數
+def visualize_all_regions_sunshine_hours():
+    regions = data['行政區'].unique()
+    
+    plt.figure(figsize=(15, 10))
+    
+    for region in regions:
+        filtered_data = data[data['行政區'] == region]
+        plt.plot(filtered_data['Year'], filtered_data['平均每日日照時數'], marker='o', linestyle='-', label=region)
+    
+    plt.title('Annual Average Daily Sunshine Hours for All Regions', fontproperties=font_properties)
+    plt.xlabel('Year', fontproperties=font_properties)
+    plt.ylabel('Average Daily Sunshine Hours (hours)', fontproperties=font_properties)
+    plt.legend(prop=font_properties, bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(True)
+    plt.tight_layout()
+    
+    output_path = os.path.join('temp_solar', 'line_H.png')
+    plt.savefig(output_path, bbox_inches='tight')
+    plt.show()
+
+# 可視化所有地區的年平均日照時數
+visualize_all_regions_sunshine_hours()
+```
+
+### 常態分佈圖
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
+
+# 讀取數據
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
+data = pd.read_csv(file_path)
+
+# 定義字體屬性
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
+font_properties = FontProperties(fname=font_path)
+
+# 清理 '總日照時數h' 列，移除非數字字符
+data['總日照時數h'] = pd.to_numeric(data['總日照時數h'], errors='coerce')
+
+# 移除 NaN 值
+data_filtered = data['總日照時數h'].dropna()
+
+# 計算IQR並移除異常值
+Q1 = data_filtered.quantile(0.25)
+Q3 = data_filtered.quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+data_no_outliers = data_filtered[(data_filtered >= lower_bound) & (data_filtered <= upper_bound)]
+
+# 繪製常態分佈圖並存為PNG文件
+plt.figure(figsize=(10, 6))
+count, bins, ignored = plt.hist(data_no_outliers, 30, density=True, alpha=0.6, color='g', edgecolor='black')
+
+mu, sigma = data_no_outliers.mean(), data_no_outliers.std()
+best_fit_line = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
+                 np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
+plt.plot(bins, best_fit_line, '--', color='red')
+
+plt.xlabel('總日照時數h', fontproperties=font_properties)
+plt.ylabel('頻率', fontproperties=font_properties)
+plt.title('去除異常值後的總日照時數常態分佈圖', fontproperties=font_properties)
+
+plt.grid(True)
+output_path = os.path.join('temp_solar', 'normaldistribution_H.png')
+plt.savefig(output_path, bbox_inches='tight')
+plt.show()
+```
+
+### 線性回歸 Y=日射量 X=平均溫度、最高溫度、最低溫度、日照時數
+
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
+
+# 讀取資料
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
+data = pd.read_csv(file_path)
+
+# 設定字體屬性
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
+font_properties = FontProperties(fname=font_path)
+
+# 定義轉換函數，將值轉換為浮點數，並將非數字值替換為NaN
+def to_float(value):
+    try:
+        if isinstance(value, str) and '*' in value:
+            return float(value.replace('*', ''))
+        return float(value)
+    except ValueError:
+        return np.nan
+
+# 將轉換函數應用到相關的列
+columns_to_check = ['平均氣溫', '總日照時數h', '總日射量MJ/ m2']
+for col in columns_to_check:
+    data[col] = data[col].apply(to_float)
+
+# 刪除包含NaN值的行
+data = data.dropna(subset=columns_to_check)
+
+# 去除離散值（使用IQR法）
+Q1 = data[columns_to_check].quantile(0.25)
+Q3 = data[columns_to_check].quantile(0.75)
+IQR = Q3 - Q1
+data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+# 再次檢查並刪除包含NaN值的行
+data = data.dropna()
+
+# 定義自變量和應變量
+X = data[['平均氣溫', '總日照時數h']].values  # 使用平均氣溫和總日照時數作為自變量
+Y = data['總日射量MJ/ m2'].values  # 依變量是總日射量
+
+# 確認X和Y中沒有NaN值
+assert not np.isnan(X).any(), "X contains NaN values"
+assert not np.isnan(Y).any(), "Y contains NaN values"
+
+# 將資料分成訓練集和測試集
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+
+# 擬合線性回歸模型
+linear_regressor = LinearRegression()
+linear_regressor.fit(X_train, Y_train)
+
+# 預測並評估模型
+Y_pred = linear_regressor.predict(X_test)
+mse = mean_squared_error(Y_test, Y_pred)
+r2 = r2_score(Y_test, Y_pred)
+
+print(f'均方誤差: {mse}')
+print(f'R平方值: {r2}')
+
+# 繪製結果圖
+plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
+plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
+plt.xlabel('實際總日射量', fontproperties=font_properties)
+plt.ylabel('預測總日射量', fontproperties=font_properties)
+plt.title('線性回歸: 總日射量 vs 平均氣溫和總日照時數', fontproperties=font_properties)
+plt.legend(prop=font_properties)
+
+# 在圖表上添加均方誤差和R平方值
+plt.text(Y_test.min(), Y_test.max(), f'均方誤差: {mse:.2f}\nR平方值: {r2:.2f}', 
+         fontsize=12, verticalalignment='top', fontproperties=font_properties)
+
+output_path = os.path.join('temp_solar', 'linear_regression.png')
+plt.savefig(output_path, bbox_inches='tight')
+
+plt.show()
+```
+
+# Final window and calculator
+
+### calculator.py
+
+>MJ/m² 轉換為kW/m² 的公式：1 MJ/m² = 0.2778 kW/m²
+
+```python
+import pandas as pd
+import tkinter as tk
+from tkinter import ttk, messagebox
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+
+# 讀取CSV資料
+file_path = os.path.join('temp_solar', 'annual_averages.csv')
+annual_averages_df = pd.read_csv(file_path)
+
+# 定義太陽能系統相關常數
+WATT_PER_PANEL = 400  # 每塊太陽能板的瓦數
+PANEL_PRICE_RANGE = (250, 360)  # 每塊太陽能板的價格區間（美元）
+USD_TO_TWD = 30  # 美元兌新台幣匯率
+DAILY_ENERGY_THRESHOLD = 11  # 每日能量需求閾值（度）
+SYSTEM_EFFICIENCY = 0.8  # 太陽能系統效率
+AREA_PER_PANEL = 1.7  # 每塊太陽能板所需的面積（平方公尺）
+
+# 其他設備價格範圍（美元）
+ROOF_MOUNT_PRICE_RANGE = (1000, 3000)
+GROUND_MOUNT_PRICE_RANGE = (2000, 4000)
+STRING_INVERTER_PRICE_RANGE = (1000, 2500)
+MICROINVERTER_PRICE_RANGE = (3000, 5000)
+BATTERY_PRICE_RANGE = (4000, 7000)  # 鋰離子電池
+CHARGE_CONTROLLER_PRICE_RANGE = (100, 500)
+DISCONNECT_SWITCH_PRICE_RANGE = (50, 200)
+LABOR_COST_RANGE = (3000, 7000)
+
+# 定義根據樓地板面積計算每日預估發電量的函數
+def calculate_daily_energy(floor_area_tsubo, esh):
+    floor_area_m2 = floor_area_tsubo * 3.305785
+    num_panels = floor_area_m2 / AREA_PER_PANEL
+    total_watt = num_panels * WATT_PER_PANEL
+    daily_energy = total_watt * esh * SYSTEM_EFFICIENCY / 1000  # 轉換成度
+    return daily_energy
+
+# 定義根據樓地板面積預估安裝價格的函數
+def estimate_installation_cost(floor_area_tsubo, roof_mount=True):
+    floor_area_m2 = floor_area_tsubo * 3.305785
+    num_panels = floor_area_m2 / AREA_PER_PANEL
+    panel_cost = num_panels * (sum(PANEL_PRICE_RANGE) / 2)
+    
+    mount_cost = sum(ROOF_MOUNT_PRICE_RANGE) / 2 if roof_mount else sum(GROUND_MOUNT_PRICE_RANGE) / 2
+    inverter_cost = sum(STRING_INVERTER_PRICE_RANGE) / 2
+    battery_cost = sum(BATTERY_PRICE_RANGE) / 2
+    controller_cost = sum(CHARGE_CONTROLLER_PRICE_RANGE) / 2
+    switch_cost = sum(DISCONNECT_SWITCH_PRICE_RANGE) / 2
+    labor_cost = sum(LABOR_COST_RANGE) / 2
+    
+    total_cost_usd = panel_cost + mount_cost + inverter_cost + battery_cost + controller_cost + switch_cost + labor_cost
+    total_cost_twd = total_cost_usd * USD_TO_TWD
+    
+    return total_cost_twd
+
+# 定義建議是否安裝的函數
+def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
+    daily_energy = calculate_daily_energy(floor_area_tsubo, esh)
+    installation_cost = estimate_installation_cost(floor_area_tsubo, roof_mount)
+    suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
+    return suggestion, daily_energy, installation_cost
+
+# 定義處理按鈕點擊的函數
+def on_submit(region_var, floor_area_var, result_var):
+    region = region_var.get()
+    try:
+        floor_area_tsubo = float(floor_area_var.get())
+    except ValueError:
+        messagebox.showerror("輸入錯誤", "請輸入有效的樓地板面積")
+        return
+    
+    esh = annual_averages_df[annual_averages_df['行政區'] == region]['ESH'].mean()
+    
+    if esh is None or pd.isna(esh):
+        messagebox.showerror("資料錯誤", "無法找到該區域的ESH資料")
+        return
+    
+    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh)
+    
+    result_var.set(f"{suggestion}\n每日預估發電量: {daily_energy:.2f} 度\n預估安裝成本: {installation_cost:.2f} 新台幣")
+
+# GUI 應用設定
+def create_ui(window):
+    # 建立視窗部件
+    ttk.Label(window, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
+    region_var = tk.StringVar()
+    region_combo = ttk.Combobox(window, textvariable=region_var)
+    region_combo['values'] = annual_averages_df['行政區'].unique().tolist()
+    region_combo.grid(column=1, row=0, padx=10, pady=10)
+
+    ttk.Label(window, text="樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
+    floor_area_var = tk.StringVar()
+    ttk.Entry(window, textvariable=floor_area_var).grid(column=1, row=1, padx=10, pady=10)
+
+    result_var = tk.StringVar()
+    ttk.Label(window, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
+
+    ttk.Button(window, text="提交", command=lambda: on_submit(region_var, floor_area_var, result_var)).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+
+# # 測試函數
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#     root.title("太陽能系統安裝建議")
+#     create_ui(root)
+#     root.mainloop()
+
+```
+
+### window.py 主程式
+
+```python
+import tkinter as tk
+from tkinter import ttk
+from PIL import Image, ImageTk
+import pandas as pd
+import os
+import calculator  # 確保已經有這個模組
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
+
+# 從CSV加載數據
+file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
+data = pd.read_csv(file_path)
+
+# 顯示選定圖像的函數
+def display_image(image_path):
+    image = Image.open(image_path)
+    image.thumbnail((800, 600))  # 調整圖像大小以適應窗口
+    img = ImageTk.PhotoImage(image)
+    img_label.config(image=img)
+    img_label.image = img
+
+# 創建主窗口
+root = tk.Tk()
+root.title("CSV查看器與圖片")
+
+# 創建Treeview小部件
+tree = ttk.Treeview(root)
+tree["columns"] = list(data.columns)
+tree["show"] = "headings"
+
+for col in data.columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=100, anchor='center')
+
+# 將數據添加到Treeview
+for index, row in data.iterrows():
+    tree.insert("", "end", values=list(row))
+
+tree.pack(side="left", fill="y")
+
+# 創建按鈕和圖像顯示的框架
+frame = ttk.Frame(root)
+frame.pack(side="right", fill="both", expand=True)
+
+# 創建按鈕
+button_texts = [
+    ("統計摘要", os.path.join('temp_solar', 'data.png')),
+    ("盒鬚圖", os.path.join('temp_solar', 'boxplot_no_outliers.png')),
+    ("每日平均日照時數", os.path.join('temp_solar', 'line_H.png')),
+    ("平均日照時數常態分佈", os.path.join('temp_solar', 'normaldistribution_H.png')),
+    ("每日平均太陽輻射量", os.path.join('temp_solar', 'line_R.png')),
+    ("平均日射量常態分佈", os.path.join('temp_solar', 'normaldistribution_R.png')),
+    ("熱力圖", os.path.join('temp_solar', 'heatmap.png')),
+    ("線性回歸", os.path.join('temp_solar', 'linear_regression.png')),
+]
+
+for text, path in button_texts:
+    button = ttk.Button(frame, text=text, command=lambda p=path: display_image(p))
+    button.pack(fill="x")
+
+# 添加執行calculator的按鈕
+def open_calculator():
+    calc_window = tk.Toplevel(root)
+    calc_window.title("太陽能系統評估工具")
+    calculator.create_ui(calc_window)
+
+calc_button = ttk.Button(frame, text="太陽能系統評估計算", command=open_calculator)
+calc_button.pack(fill="x")
+
+# 顯示圖像的標籤
+img_label = ttk.Label(frame)
+img_label.pack(fill="both", expand=True)
+
+# 運行應用程序
+root.mainloop()
+```
+![window](./螢幕擷取畫面%202024-07-18%20002159.png)
+![calculator01](./螢幕擷取畫面%202024-07-18%20002313.png)![calculator02](./螢幕擷取畫面%202024-07-18%20002343.png)
+
+> 主程式加載了整理過後的CSV、各項圖表、並增加了一個按鈕呼叫calculator計算器，計算的公式來源及預估金額之前已提過。
+
+> 價格的部分來自北美跟歐洲，台灣安裝價格大概會在50%-70%不等，台灣沒有可查詢到的公開資訊。
+
+> # 結論: 要不要裝設太陽能系統、最重要的因素是口袋深度，有很多錢就裝。沒有錢還是繼續用愛發電(笑)，但可支配樓地板面積足夠的話太陽能目前能自給自足並且還能賣多於的電給台電，收購價大約為每度10元左右。

@@ -2,10 +2,17 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+import os
 
-# Load the data
-# file_path = r'D:\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
+
+# 加載 CSV 文件
+file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
 data = pd.read_csv(file_path)
 
 # Convert all relevant columns to float
@@ -20,8 +27,7 @@ data = data.dropna(subset=columns_to_convert)
 correlation_matrix = data[columns_to_convert].corr()
 
 # Load the custom font
-# font_path = r'D:\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
 # Update the font properties for matplotlib
@@ -35,5 +41,9 @@ sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm", linewidt
 plt.title('Correlation Heatmap of Weather Attributes', fontproperties=font_properties)
 plt.xticks(fontproperties=font_properties)
 plt.yticks(fontproperties=font_properties)
+
+# save png
+output_path = os.path.join('temp_solar', 'heatmap.png')
+plt.savefig(output_path, bbox_inches='tight')
 
 plt.show()

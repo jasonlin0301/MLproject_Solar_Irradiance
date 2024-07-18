@@ -5,18 +5,28 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+import os
+
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
 # 讀取資料
-file_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\test\processed_data_v2.csv'
+file_path = os.path.join('temp_solar', 'processed_data_v2_with_daily_averages.csv')
 data = pd.read_csv(file_path)
 
-# 設定字體路徑
-font_path = r'C:\Users\lanvi\OneDrive\Documents\github\MLproject_Solar_Irradiance\ChocolateClassicalSans-Regular.ttf'
+# 設定字體屬性
+font_path = os.path.join('ChocolateClassicalSans-Regular.ttf')
 font_properties = FontProperties(fname=font_path)
 
 # 定義轉換函數，將值轉換為浮點數，並將非數字值替換為NaN
 def to_float(value):
     try:
+        if isinstance(value, str) and '*' in value:
+            return float(value.replace('*', ''))
         return float(value)
     except ValueError:
         return np.nan
@@ -35,12 +45,19 @@ Q3 = data[columns_to_check].quantile(0.75)
 IQR = Q3 - Q1
 data = data[~((data[columns_to_check] < (Q1 - 1.5 * IQR)) | (data[columns_to_check] > (Q3 + 1.5 * IQR))).any(axis=1)]
 
+# 再次檢查並刪除包含NaN值的行
+data = data.dropna()
+
 # 定義自變量和應變量
-X = data[['總日照時數h', '總日射量MJ/ m2']].values  # 使用總日照時數和總日射量作為自變量
-Y = data['平均氣溫'].values  # 依變量是平均氣溫
+X = data[['平均氣溫', '總日照時數h']].values  # 使用平均氣溫和總日照時數作為自變量
+Y = data['總日射量MJ/ m2'].values  # 依變量是總日射量
+
+# 確認X和Y中沒有NaN值
+assert not np.isnan(X).any(), "X contains NaN values"
+assert not np.isnan(Y).any(), "Y contains NaN values"
 
 # 將資料分成訓練集和測試集
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
 
 # 擬合線性回歸模型
 linear_regressor = LinearRegression()
@@ -57,8 +74,16 @@ print(f'R平方值: {r2}')
 # 繪製結果圖
 plt.scatter(Y_test, Y_pred, color='blue', label='實際值 vs 預測值')
 plt.plot([Y_test.min(), Y_test.max()], [Y_test.min(), Y_test.max()], color='red', linewidth=2, label='理想預測')
-plt.xlabel('實際平均氣溫', fontproperties=font_properties)
-plt.ylabel('預測平均氣溫', fontproperties=font_properties)
-plt.title('線性回歸: 總日照時數和總日射量 vs 平均氣溫', fontproperties=font_properties)
+plt.xlabel('實際總日射量', fontproperties=font_properties)
+plt.ylabel('預測總日射量', fontproperties=font_properties)
+plt.title('線性回歸: 總日射量 vs 平均氣溫和總日照時數', fontproperties=font_properties)
 plt.legend(prop=font_properties)
+
+# 在圖表上添加均方誤差和R平方值
+plt.text(Y_test.min(), Y_test.max(), f'均方誤差: {mse:.2f}\nR平方值: {r2:.2f}', 
+         fontsize=12, verticalalignment='top', fontproperties=font_properties)
+
+output_path = os.path.join('temp_solar', 'linear_regression.png')
+plt.savefig(output_path, bbox_inches='tight')
+
 plt.show()
